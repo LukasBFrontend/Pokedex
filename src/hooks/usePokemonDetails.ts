@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useSearchResults } from "./useSearchResults";
 import { getPokemonIdFromUrl } from "../utils";
-import type { FetchPokemonDetailsResponse } from "../api/types";
 import { FetchPokemonDetails } from "../api/api";
+import type { FetchPokemonDetailsResponse } from "../api/types";
 
 const detailsCache = new Map<number, FetchPokemonDetailsResponse>();
 

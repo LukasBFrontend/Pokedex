@@ -1,13 +1,12 @@
 import axios from "axios";
-import type { FetchPokemonsResponse, FetchPokemonDetailsResponse } from "./types";
-
-const BASE_URL = "https://pokeapi.co/api/v2/";
+import type { FetchPokemonDetailsResponse, FetchPokemonsResponse, FetchPokemonTypeResponse } from "./types";
+import { API_BASE_URL } from "../constants";
 
 export const FetchPokemons = async (
   maxResults: number = 151,
   offset: number = 0,
 ): Promise<FetchPokemonsResponse> => {
-  let url = `${BASE_URL}pokemon?`;
+  let url = `${API_BASE_URL}pokemon?`;
 
   url += `offset=${offset}&`;
   url += `limit=${maxResults}`;
@@ -26,6 +25,17 @@ export const FetchPokemonDetails = async (
   try {
     const response = await axios.get(url);
     return response.data as FetchPokemonDetailsResponse;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const FetchPokemonType = async (
+  url: string,
+): Promise<FetchPokemonTypeResponse> => {
+  try {
+    const response = await axios.get(url);
+    return response.data as FetchPokemonTypeResponse;
   } catch (error) {
     console.error(error);
   }

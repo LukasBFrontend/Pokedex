@@ -1,15 +1,8 @@
 import { useCallback, useEffect, type Dispatch, type SetStateAction } from "react";
 import { useSearchParams } from "react-router";
+import { parsePageIndex, parseResultsPerPage } from "../utils";
 
 export const RESULTS_PER_PAGE = 30;
-
-const parsePageIndex = (params: URLSearchParams): number => {
-  return Number(params.get("index")) || 1;
-};
-
-const parseResultsPerPage = (params: URLSearchParams): number => {
-  return Number(params.get("results")) || RESULTS_PER_PAGE;
-};
 
 type PaginationContextType = {
   pageIndex: number;

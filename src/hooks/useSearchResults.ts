@@ -1,5 +1,5 @@
-import { useSearchParams } from "react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { FetchPokemons } from "../api/api";
 import type { NamedApiResource } from "../api/types";
 

@@ -1,23 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useSearchResults } from "../../../hooks/useSearchResults";
-import { FetchPokemonDetails } from "../../../api/api";
+import { FetchPokemonDetails, FetchPokemonType } from "../../../api/api";
+import { getPokemonIdFromUrl, getPokemonTypeFromUrl } from "../../../utils";
 import { SearchResultCard, SearchResultCardSkeleton } from "./SearchResultCard";
 import { usePagination } from "../../../hooks/usePagination";
-import { getPokemonIdFromUrl } from "../../../utils";
 import { usePokemonDetails } from "../../../hooks/usePokemonDetails";
 import type { PokemonSummary } from "./types";
-import type { FetchPokemonDetailsResponse } from "../../../api/types";
+import type {
+  FetchPokemonDetailsResponse,
+  FetchPokemonTypeResponse,
+} from "../../../api/types";
+import { usePokemonTypes } from "../../../hooks/usePokemonTypes";
 
 const ROW_SIZE = 3;
 
-const toPokemonSummary = (pokemon: FetchPokemonDetailsResponse): PokemonSummary => ({
+const toPokemonSummary = (
+  pokemon: FetchPokemonDetailsResponse,
+  types: FetchPokemonTypeResponse[],
+): PokemonSummary => ({
   id: pokemon.id,
   name: pokemon.name,
-  types: pokemon.types,
   artworkURL: pokemon.sprites.other["official-artwork"].front_default,
+  typeNameURLs: types.map(
+    (type) => type?.sprites["generation-viii"]["sword-shield"].name_icon,
+  ),
 });
 
 export const SearchResultsPage: React.FC = () => {
+  const { pokemonType } = usePokemonTypes();
   const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
   const { results } = useSearchResults();
   const { pageIndex, resultsPerPage } = usePagination();
@@ -46,7 +56,19 @@ export const SearchResultsPage: React.FC = () => {
             setPokemonDetails(pokemon);
           }
 
-          mappedSummaries.push(toPokemonSummary(pokemon));
+          const types = await Promise.all(
+            pokemon.types.map(async (slot) => {
+              const type = getPokemonTypeFromUrl(slot.type.url);
+              let typeResponse = pokemonType(type);
+
+              if (typeResponse == null) {
+                typeResponse = await FetchPokemonType(slot.type.url);
+              }
+              return typeResponse;
+            }),
+          );
+
+          mappedSummaries.push(toPokemonSummary(pokemon, types));
         }
       };
 

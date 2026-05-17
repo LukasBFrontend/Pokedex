@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Search } from "@mui/icons-material";
-import { SearchPaginator } from "./pages/SearchPage/SearchPaginator";
+import { SearchPaginator } from "./pages/search_results/SearchPaginator";
 import { useSearchParams } from "react-router";
 import { usePagination } from "../hooks/usePagination";
 import { useSearchResults } from "../hooks/useSearchResults";

@@ -1,3 +1,5 @@
+import type { pokemonType } from "../constants";
+
 export type NamedApiResource = {
   name: string;
   url: string;
@@ -158,4 +160,102 @@ export type FetchPokemonDetailsResponse = {
   stats: PokemonStat[];
   types: PokemonTypeSlot[];
   weight: number;
+};
+
+type TypeDamageRelations = {
+  double_damage_from: NamedApiResource[];
+  double_damage_to: NamedApiResource[];
+  half_damage_from: NamedApiResource[];
+  half_damage_to: NamedApiResource[];
+  no_damage_from: NamedApiResource[];
+  no_damage_to: NamedApiResource[];
+};
+
+type TypeGameIndex = {
+  game_index: number;
+  generation: NamedApiResource;
+};
+
+type LocalizedName = {
+  language: NamedApiResource;
+  name: string;
+};
+
+type PastTypeDamageRelations = {
+  damage_relations: TypeDamageRelations;
+  generation: NamedApiResource;
+};
+
+type TypePokemonEntry = {
+  pokemon: NamedApiResource;
+  slot: number;
+};
+
+type TypeSpriteIcons = {
+  name_icon: string;
+  symbol_icon: string | null;
+};
+
+type TypeSpritesGenerationIII = {
+  colosseum: TypeSpriteIcons;
+  emerald: TypeSpriteIcons;
+  "firered-leafgreen": TypeSpriteIcons;
+  "ruby-sapphire": TypeSpriteIcons;
+  xd: TypeSpriteIcons;
+};
+
+type TypeSpritesGenerationIV = {
+  "diamond-pearl": TypeSpriteIcons;
+  "heartgold-soulsilver": TypeSpriteIcons;
+  platinum: TypeSpriteIcons;
+};
+
+type TypeSpritesGenerationV = {
+  "black-2-white-2": TypeSpriteIcons;
+  "black-white": TypeSpriteIcons;
+};
+
+type TypeSpritesGenerationVI = {
+  "omega-ruby-alpha-sapphire": TypeSpriteIcons;
+  "x-y": TypeSpriteIcons;
+};
+
+type TypeSpritesGenerationVII = {
+  "lets-go-pikachu-lets-go-eevee": TypeSpriteIcons;
+  "sun-moon": TypeSpriteIcons;
+  "ultra-sun-ultra-moon": TypeSpriteIcons;
+};
+
+type TypeSpritesGenerationVIII = {
+  "brilliant-diamond-shining-pearl": TypeSpriteIcons;
+  "legends-arceus": TypeSpriteIcons;
+  "sword-shield": TypeSpriteIcons;
+};
+
+type TypeSpritesGenerationIX = {
+  "scarlet-violet": TypeSpriteIcons;
+};
+
+type PokemonTypeSprites = {
+  "generation-iii": TypeSpritesGenerationIII;
+  "generation-iv": TypeSpritesGenerationIV;
+  "generation-v": TypeSpritesGenerationV;
+  "generation-vi": TypeSpritesGenerationVI;
+  "generation-vii": TypeSpritesGenerationVII;
+  "generation-viii": TypeSpritesGenerationVIII;
+  "generation-ix": TypeSpritesGenerationIX;
+};
+
+export type FetchPokemonTypeResponse = {
+  damage_relations: TypeDamageRelations;
+  game_indices: TypeGameIndex[];
+  generation: NamedApiResource;
+  id: number;
+  move_damage_class: NamedApiResource;
+  moves: NamedApiResource[];
+  name: pokemonType;
+  names: LocalizedName[];
+  past_damage_relations: PastTypeDamageRelations[];
+  pokemon: TypePokemonEntry[];
+  sprites: PokemonTypeSprites;
 };

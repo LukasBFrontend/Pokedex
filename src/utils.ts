@@ -1,4 +1,19 @@
-import { RESULTS_PER_PAGE_FALLBACK } from "./constants";
+import {
+  POKEMON_TYPES,
+  RESULTS_PER_PAGE_FALLBACK,
+  type pokemonType,
+  type typeURL,
+} from "./constants";
+
+const pokemonTypeSlugs = new Set<string>(Object.values(POKEMON_TYPES));
+
+export const getPokemonTypeFromUrl = (url: typeURL | string): pokemonType | null => {
+  const slug = url.split("/").pop();
+  if (slug == null || !pokemonTypeSlugs.has(slug)) {
+    return null;
+  }
+  return slug as pokemonType;
+};
 
 export const getPokemonIdFromUrl = (url: string): number => {
   const match = /\/(\d+)\/?$/.exec(url);

@@ -18,11 +18,13 @@ export const SearchResultCard: React.FC<Props> = ({ summary }) => {
         className="tw-max-h-100 shrink"
         src={summary.artworkURL}
       />
-      <div className="flex gap-4">
-        {summary.types.map((typeslot) => (
-          <span className="rounded-3xl px-4 pt-2 pb-2.5 bg-primary leading-none text-secondary">
-            {typeslot.type.name}
-          </span>
+      <div className="grid grid-cols-2 gap-4">
+        {summary.typeNameURLs.map((url) => (
+          <img
+            className="rounded-md"
+            src={url}
+            alt="a"
+          />
         ))}
       </div>
     </section>
