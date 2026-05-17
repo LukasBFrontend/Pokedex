@@ -1,6 +1,4 @@
-import type { FetchPokemonDetailsResponse } from "./api/types";
-
-const detailsCache = new Map<number, FetchPokemonDetailsResponse>();
+import { RESULTS_PER_PAGE_FALLBACK } from "./constants";
 
 export const getPokemonIdFromUrl = (url: string): number => {
   const match = /\/(\d+)\/?$/.exec(url);
@@ -10,14 +8,10 @@ export const getPokemonIdFromUrl = (url: string): number => {
   return Number(match[1]);
 };
 
-export const getCachedPokemonDetails = (
-  id: number,
-): FetchPokemonDetailsResponse | null => {
-  return detailsCache.get(id) ?? null;
+export const parsePageIndex = (params: URLSearchParams): number => {
+  return Number(params.get("index")) || 1;
 };
 
-export const cachePokemonDetails = (
-  pokemonDetails: FetchPokemonDetailsResponse,
-): void => {
-  detailsCache.set(pokemonDetails.id, pokemonDetails);
+export const parseResultsPerPage = (params: URLSearchParams): number => {
+  return Number(params.get("results")) || RESULTS_PER_PAGE_FALLBACK;
 };

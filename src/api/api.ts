@@ -12,18 +12,17 @@ export const FetchPokemons = async (
   url += `offset=${offset}&`;
   url += `limit=${maxResults}`;
 
-  console.log(url);
-
   try {
     const response = await axios.get(url);
-    console.log({ response: response });
     return response.data as FetchPokemonsResponse;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const FetchPokemonDetails = async (url: string): Promise<FetchPokemonDetailsResponse> => {
+export const FetchPokemonDetails = async (
+  url: string,
+): Promise<FetchPokemonDetailsResponse> => {
   try {
     const response = await axios.get(url);
     return response.data as FetchPokemonDetailsResponse;

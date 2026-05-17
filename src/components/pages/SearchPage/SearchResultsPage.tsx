@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useResults } from "../../../hooks/useResults";
+import { useSearchResults } from "../../../hooks/useSearchResults";
 import { FetchPokemonDetails } from "../../../api/api";
 import { SearchResultCard, SearchResultCardSkeleton } from "./SearchResultCard";
 import { usePagination } from "../../../hooks/usePagination";
+import { getPokemonIdFromUrl } from "../../../utils";
+import { usePokemonDetails } from "../../../hooks/usePokemonDetails";
 import type { PokemonSummary } from "./types";
-import {
-  cachePokemonDetails,
-  getCachedPokemonDetails,
-  getPokemonIdFromUrl,
-} from "../../../utils";
 import type { FetchPokemonDetailsResponse } from "../../../api/types";
 
 const ROW_SIZE = 3;
@@ -20,27 +17,14 @@ const toPokemonSummary = (pokemon: FetchPokemonDetailsResponse): PokemonSummary 
   artworkURL: pokemon.sprites.other["official-artwork"].front_default,
 });
 
-type Props = {};
-
-export const SearchResults: React.FC<Props> = () => {
-  const { results } = useResults();
+export const SearchResultsPage: React.FC = () => {
+  const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
+  const { results } = useSearchResults();
   const { pageIndex, resultsPerPage } = usePagination();
   const [summaries, setSummaries] = useState<PokemonSummary[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-
-    const prefetchDetails = async (): Promise<void> => {
-      for (let i = 0; i < results.length; i++) {
-        const entry = results[i];
-        const id = getPokemonIdFromUrl(entry.url);
-        let pokemon = getCachedPokemonDetails(id);
-        if (pokemon == null) {
-          pokemon = await FetchPokemonDetails(entry.url);
-          cachePokemonDetails(pokemon);
-        }
-      }
-    };
 
     const loadSummaries = async (pageIndex: number): Promise<void> => {
       if (results == null) {
@@ -56,23 +40,20 @@ export const SearchResults: React.FC<Props> = () => {
 
           const entry = results[i];
           const id = getPokemonIdFromUrl(entry.url);
-          let pokemon = getCachedPokemonDetails(id);
+          let pokemon = pokemonDetails(id);
           if (pokemon == null) {
             pokemon = await FetchPokemonDetails(entry.url);
-            cachePokemonDetails(pokemon);
+            setPokemonDetails(pokemon);
           }
 
           mappedSummaries.push(toPokemonSummary(pokemon));
         }
       };
 
-      prefetchDetails();
+      const start = resultsPerPage * (pageIndex - 1);
+      const end = Math.min(results.length, resultsPerPage * pageIndex);
 
-      for (
-        let i = resultsPerPage * (pageIndex - 1);
-        i < Math.min(results.length, resultsPerPage * pageIndex);
-        i += ROW_SIZE
-      ) {
+      for (let i = start; i < end; i += ROW_SIZE) {
         if (cancelled) {
           return;
         }
@@ -94,6 +75,8 @@ export const SearchResults: React.FC<Props> = () => {
     resultsPerPage,
     results,
     pageIndex,
+    pokemonDetails,
+    setPokemonDetails,
   ]);
 
   const displaySummaries = results ? summaries : [];
@@ -121,4 +104,4 @@ export const SearchResults: React.FC<Props> = () => {
   );
 };
 
-export default SearchResults;
+export default SearchResultsPage;

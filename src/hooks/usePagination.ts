@@ -11,12 +11,14 @@ const parseResultsPerPage = (params: URLSearchParams): number => {
   return Number(params.get("results")) || RESULTS_PER_PAGE;
 };
 
-export const usePagination = (): {
+type PaginationContextType = {
   pageIndex: number;
   setPageIndex: Dispatch<SetStateAction<number>>;
   resultsPerPage: number;
   setResultsPerPage: Dispatch<SetStateAction<number>>;
-} => {
+};
+
+export const usePagination = (): PaginationContextType => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageIndex = parsePageIndex(searchParams);

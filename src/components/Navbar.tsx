@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Search } from "@mui/icons-material";
-import { useSearchParams } from "react-router";
 import { SearchPaginator } from "./pages/SearchPage/SearchPaginator";
+import { useSearchParams } from "react-router";
 import { usePagination } from "../hooks/usePagination";
+import { useSearchResults } from "../hooks/useSearchResults";
 
-type Props = {
-  resultsCount?: number;
-};
-
-export const Navbar: React.FC<Props> = ({ resultsCount }) => {
+export const Navbar: React.FC = () => {
   const { pageIndex, setPageIndex, resultsPerPage } = usePagination();
+  const { count } = useSearchResults();
   const [
     searchInput,
     setSearchInput,
@@ -42,7 +40,7 @@ export const Navbar: React.FC<Props> = ({ resultsCount }) => {
     <nav className="flex items-center gap-5">
       <SearchPaginator
         index={pageIndex}
-        results={resultsCount ?? 0}
+        results={count ?? 0}
         resultsPerPage={resultsPerPage}
         setPageIndex={setPageIndex}
       />

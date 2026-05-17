@@ -1,4 +1,4 @@
-import React, { useEffect, type Dispatch, type SetStateAction } from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 
 type Props = {

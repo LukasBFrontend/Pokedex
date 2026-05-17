@@ -1,0 +1,1 @@
+export const RESULTS_PER_PAGE_FALLBACK = 30;
