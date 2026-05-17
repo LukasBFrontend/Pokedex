@@ -1,0 +1,124 @@
+import React, { useEffect, useState } from "react";
+import { useResults } from "../../../hooks/useResults";
+import { FetchPokemonDetails } from "../../../api/api";
+import { SearchResultCard, SearchResultCardSkeleton } from "./SearchResultCard";
+import { usePagination } from "../../../hooks/usePagination";
+import type { PokemonSummary } from "./types";
+import {
+  cachePokemonDetails,
+  getCachedPokemonDetails,
+  getPokemonIdFromUrl,
+} from "../../../utils";
+import type { FetchPokemonDetailsResponse } from "../../../api/types";
+
+const ROW_SIZE = 3;
+
+const toPokemonSummary = (pokemon: FetchPokemonDetailsResponse): PokemonSummary => ({
+  id: pokemon.id,
+  name: pokemon.name,
+  types: pokemon.types,
+  artworkURL: pokemon.sprites.other["official-artwork"].front_default,
+});
+
+type Props = {};
+
+export const SearchResults: React.FC<Props> = () => {
+  const { results } = useResults();
+  const { pageIndex, resultsPerPage } = usePagination();
+  const [summaries, setSummaries] = useState<PokemonSummary[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const prefetchDetails = async (): Promise<void> => {
+      for (let i = 0; i < results.length; i++) {
+        const entry = results[i];
+        const id = getPokemonIdFromUrl(entry.url);
+        let pokemon = getCachedPokemonDetails(id);
+        if (pokemon == null) {
+          pokemon = await FetchPokemonDetails(entry.url);
+          cachePokemonDetails(pokemon);
+        }
+      }
+    };
+
+    const loadSummaries = async (pageIndex: number): Promise<void> => {
+      if (results == null) {
+        return;
+      }
+      const mappedSummaries: PokemonSummary[] = [];
+
+      const fetchRow = async (startIndex: number): Promise<void> => {
+        for (let i = startIndex; i < startIndex + ROW_SIZE; i++) {
+          if (i >= results.length) {
+            break;
+          }
+
+          const entry = results[i];
+          const id = getPokemonIdFromUrl(entry.url);
+          let pokemon = getCachedPokemonDetails(id);
+          if (pokemon == null) {
+            pokemon = await FetchPokemonDetails(entry.url);
+            cachePokemonDetails(pokemon);
+          }
+
+          mappedSummaries.push(toPokemonSummary(pokemon));
+        }
+      };
+
+      prefetchDetails();
+
+      for (
+        let i = resultsPerPage * (pageIndex - 1);
+        i < Math.min(results.length, resultsPerPage * pageIndex);
+        i += ROW_SIZE
+      ) {
+        if (cancelled) {
+          return;
+        }
+
+        await fetchRow(i);
+
+        if (!cancelled) {
+          setSummaries([...mappedSummaries]);
+        }
+      }
+    };
+
+    void loadSummaries(pageIndex);
+
+    return (): void => {
+      cancelled = true;
+    };
+  }, [
+    resultsPerPage,
+    results,
+    pageIndex,
+  ]);
+
+  const displaySummaries = results ? summaries : [];
+  const pageResultCount = results
+    ? Math.min(results.length, resultsPerPage * pageIndex) -
+      resultsPerPage * (pageIndex - 1)
+    : 0;
+  const skeletonCount = Math.max(0, pageResultCount - displaySummaries.length);
+
+  return (
+    <>
+      <h2 className="ml-12">Results: {results?.length}</h2>
+      {/* Grid */}
+      <div className="grid grid-cols-3 auto-rows-[35rem] gap-14">
+        {displaySummaries.map((summary) => (
+          <SearchResultCard summary={summary} />
+        ))}
+        {Array.from({ length: skeletonCount }, (_, index) => (
+          <SearchResultCardSkeleton
+            key={`skeleton-${displaySummaries.length + index}`}
+          />
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default SearchResults;
