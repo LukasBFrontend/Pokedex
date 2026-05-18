@@ -1,3 +1,4 @@
+import type { FetchPokemonSpeciesResponse } from "./api/types";
 import {
   POKEMON_TYPES,
   RESULTS_PER_PAGE_FALLBACK,
@@ -21,6 +22,14 @@ export const getPokemonIdFromUrl = (url: string): number => {
     throw new Error(`Invalid pokemon URL: ${url}`);
   }
   return Number(match[1]);
+};
+
+export const getEnglishDescription = (species: FetchPokemonSpeciesResponse): string => {
+  const englishEntries = species.flavor_text_entries.filter(
+    (entry) => entry.language.name === "en",
+  );
+  const entry = englishEntries[englishEntries.length - 1];
+  return entry?.flavor_text.replace(/\f/g, " ").replace(/\n/g, " ") ?? "";
 };
 
 export const parsePageIndex = (params: URLSearchParams): number => {

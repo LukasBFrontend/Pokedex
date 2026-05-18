@@ -259,3 +259,69 @@ export type FetchPokemonTypeResponse = {
   pokemon: TypePokemonEntry[];
   sprites: PokemonTypeSprites;
 };
+
+type ApiResource = {
+  url: string;
+};
+
+type FlavorTextEntry = {
+  flavor_text: string;
+  language: NamedApiResource;
+  version: NamedApiResource;
+};
+
+type FormDescription = {
+  description: string;
+  language: NamedApiResource;
+};
+
+type GenusEntry = {
+  genus: string;
+  language: NamedApiResource;
+};
+
+type PalParkEncounter = {
+  area: NamedApiResource;
+  base_score: number;
+  rate: number;
+};
+
+type PokedexNumberEntry = {
+  entry_number: number;
+  pokedex: NamedApiResource;
+};
+
+type PokemonVariety = {
+  is_default: boolean;
+  pokemon: NamedApiResource;
+};
+
+export type FetchPokemonSpeciesResponse = {
+  base_happiness: number;
+  capture_rate: number;
+  color: NamedApiResource;
+  egg_groups: NamedApiResource[];
+  evolution_chain: ApiResource;
+  evolves_from_species: NamedApiResource | null;
+  flavor_text_entries: FlavorTextEntry[];
+  form_descriptions: FormDescription[];
+  forms_switchable: boolean;
+  gender_rate: number;
+  genera: GenusEntry[];
+  generation: NamedApiResource;
+  growth_rate: NamedApiResource;
+  habitat: NamedApiResource;
+  has_gender_differences: boolean;
+  hatch_counter: number;
+  id: number;
+  is_baby: boolean;
+  is_legendary: boolean;
+  is_mythical: boolean;
+  name: string;
+  names: LocalizedName[];
+  order: number;
+  pal_park_encounters: PalParkEncounter[];
+  pokedex_numbers: PokedexNumberEntry[];
+  shape: NamedApiResource;
+  varieties: PokemonVariety[];
+};

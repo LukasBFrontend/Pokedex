@@ -1,5 +1,10 @@
 import axios from "axios";
-import type { FetchPokemonDetailsResponse, FetchPokemonsResponse, FetchPokemonTypeResponse } from "./types";
+import type {
+  FetchPokemonDetailsResponse,
+  FetchPokemonsResponse,
+  FetchPokemonSpeciesResponse,
+  FetchPokemonTypeResponse,
+} from "./types";
 import { API_BASE_URL } from "../constants";
 
 export const FetchPokemons = async (
@@ -40,3 +45,14 @@ export const FetchPokemonType = async (
     console.error(error);
   }
 };
+
+export const FetchPokemonSpecies = async (
+  url: string,
+): Promise<FetchPokemonSpeciesResponse> => {
+  try {
+    const response = await axios.get(url);
+    return response.data as FetchPokemonSpeciesResponse;
+  } catch (error) {
+    console.error(error);
+  }
+}; 

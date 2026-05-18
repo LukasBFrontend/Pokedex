@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchResults } from "../../../hooks/useSearchResults";
 import { FetchPokemonDetails, FetchPokemonType } from "../../../api/api";
 import { getPokemonIdFromUrl, getPokemonTypeFromUrl } from "../../../utils";
-import { SearchResultCard, SearchResultCardSkeleton } from "./SearchResultCard";
+import { PokemonSummaryCard, PokemonSummaryCardSkeleton } from "./PokemonSummaryCard";
 import { usePagination } from "../../../hooks/usePagination";
 import { usePokemonDetails } from "../../../hooks/usePokemonDetails";
 import type { PokemonSummary } from "./types";
@@ -11,6 +11,7 @@ import type {
   FetchPokemonTypeResponse,
 } from "../../../api/types";
 import { usePokemonTypes } from "../../../hooks/usePokemonTypes";
+import { useParams } from "react-router";
 
 const ROW_SIZE = 3;
 
@@ -32,6 +33,12 @@ export const SearchResultsPage: React.FC = () => {
   const { results } = useSearchResults();
   const { pageIndex, resultsPerPage } = usePagination();
   const [summaries, setSummaries] = useState<PokemonSummary[]>([]);
+
+  useEffect(() => {
+    if (q != null) {
+      alert(q.va);
+    }
+  }, [q]);
 
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +106,7 @@ export const SearchResultsPage: React.FC = () => {
     pageIndex,
     pokemonDetails,
     setPokemonDetails,
+    pokemonType,
   ]);
 
   const displaySummaries = results ? summaries : [];
@@ -114,10 +122,13 @@ export const SearchResultsPage: React.FC = () => {
       {/* Grid */}
       <div className="grid grid-cols-3 auto-rows-[35rem] gap-14">
         {displaySummaries.map((summary) => (
-          <SearchResultCard summary={summary} />
+          <PokemonSummaryCard
+            key={summary.name}
+            summary={summary}
+          />
         ))}
         {Array.from({ length: skeletonCount }, (_, index) => (
-          <SearchResultCardSkeleton
+          <PokemonSummaryCardSkeleton
             key={`skeleton-${displaySummaries.length + index}`}
           />
         ))}

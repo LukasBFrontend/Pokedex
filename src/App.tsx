@@ -11,7 +11,7 @@ const App: React.FC = () => {
           <Navbar />
         </div>
       </header>
-      <article className="max-w-[var(--page-max-width)] mx-auto py-10">
+      <article className="max-w-[var(--page-max-width)] min-h-[90vh] mx-auto py-10">
         <Outlet />
       </article>
       <Footer />
