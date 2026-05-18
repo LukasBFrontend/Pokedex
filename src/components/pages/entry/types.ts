@@ -1,4 +1,4 @@
-export type pokemonMetaData = {
+export type PokemonMetaData = {
   id: number;
   name: string;
   typeNameURLs: string[];

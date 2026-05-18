@@ -55,4 +55,4 @@ export const FetchPokemonSpecies = async (
   } catch (error) {
     console.error(error);
   }
-}; 
+};

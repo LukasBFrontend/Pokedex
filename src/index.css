@@ -88,4 +88,57 @@
   }
 }
 
+/* Pokemon summary card: morph wrapper width/height between grid and entry */
+.pokemon-summary-card-view-transition {
+  contain: layout;
+}
+
+/* Source: only the clicked NavLink during navigation (React Router adds .transitioning) */
+a.transitioning .pokemon-summary-card-view-transition,
+/* Destination: always named on the detail page */
+.entry-pokemon-card .pokemon-summary-card-view-transition {
+  view-transition-name: pokemon-summary-card;
+}
+
+.app-header {
+  view-transition-name: app-header;
+}
+
+::view-transition-group(root) {
+  z-index: 0;
+}
+
+::view-transition-group(app-header) {
+  z-index: 100;
+}
+
+::view-transition-group(pokemon-summary-card) {
+  z-index: 1;
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(pokemon-summary-card),
+::view-transition-new(pokemon-summary-card) {
+  width: 100%;
+  height: 100%;
+  object-fit: none;
+}
+
+/* Forward: subtle page cross-fade while the card morphs */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.15s;
+}
+
+/* Back to search — pseudos are on <html>, not descendants */
+html[data-view-transition-back]::view-transition-group(root),
+html[data-view-transition-back]::view-transition-old(root),
+html[data-view-transition-back]::view-transition-new(root),
+html[data-view-transition-back]::view-transition-group(pokemon-summary-card),
+html[data-view-transition-back]::view-transition-old(pokemon-summary-card),
+html[data-view-transition-back]::view-transition-new(pokemon-summary-card) {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+}
 

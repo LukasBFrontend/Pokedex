@@ -1,31 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useSearchResults } from "../../../hooks/useSearchResults";
+import { usePagination, usePokemonDetails, usePokemonTypes } from "../../../hooks";
 import { FetchPokemonDetails, FetchPokemonType } from "../../../api/api";
-import { getPokemonIdFromUrl, getPokemonTypeFromUrl } from "../../../utils";
-import { PokemonSummaryCard, PokemonSummaryCardSkeleton } from "./PokemonSummaryCard";
-import { usePagination } from "../../../hooks/usePagination";
-import { usePokemonDetails } from "../../../hooks/usePokemonDetails";
+import {
+  getPokemonIdFromUrl,
+  getPokemonTypeFromUrl,
+  toPokemonSummary,
+} from "../../../utils";
+import {
+  PokemonSummaryCard,
+  PokemonSummaryCardSkeleton,
+  PokemonSummaryCardTransition,
+} from "../../PokemonSummaryCard";
 import type { PokemonSummary } from "./types";
-import type {
-  FetchPokemonDetailsResponse,
-  FetchPokemonTypeResponse,
-} from "../../../api/types";
-import { usePokemonTypes } from "../../../hooks/usePokemonTypes";
-import { useParams } from "react-router";
+import type { FetchPokemonTypeResponse } from "../../../api/types";
+import { NavLink } from "react-router";
 
 const ROW_SIZE = 3;
 
-const toPokemonSummary = (
-  pokemon: FetchPokemonDetailsResponse,
-  types: FetchPokemonTypeResponse[],
-): PokemonSummary => ({
-  id: pokemon.id,
-  name: pokemon.name,
-  artworkURL: pokemon.sprites.other["official-artwork"].front_default,
-  typeNameURLs: types.map(
-    (type) => type?.sprites["generation-viii"]["sword-shield"].name_icon,
-  ),
-});
+const PokemonSummaryLink: React.FC<{ summary: PokemonSummary }> = ({ summary }) => {
+  const href = `/pokemon/${summary.id}`;
+
+  return (
+    <NavLink
+      to={href}
+      viewTransition
+      className={({ isTransitioning }) =>
+        `block h-full min-h-0${isTransitioning ? " transitioning" : ""}`
+      }
+    >
+      <PokemonSummaryCardTransition>
+        <PokemonSummaryCard summary={summary} />
+      </PokemonSummaryCardTransition>
+    </NavLink>
+  );
+};
 
 export const SearchResultsPage: React.FC = () => {
   const { pokemonType } = usePokemonTypes();
@@ -33,12 +42,6 @@ export const SearchResultsPage: React.FC = () => {
   const { results } = useSearchResults();
   const { pageIndex, resultsPerPage } = usePagination();
   const [summaries, setSummaries] = useState<PokemonSummary[]>([]);
-
-  useEffect(() => {
-    if (q != null) {
-      alert(q.va);
-    }
-  }, [q]);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,7 +78,9 @@ export const SearchResultsPage: React.FC = () => {
             }),
           );
 
-          mappedSummaries.push(toPokemonSummary(pokemon, types));
+          mappedSummaries.push(
+            toPokemonSummary(pokemon, types as FetchPokemonTypeResponse[]),
+          );
         }
       };
 
@@ -117,13 +122,16 @@ export const SearchResultsPage: React.FC = () => {
   const skeletonCount = Math.max(0, pageResultCount - displaySummaries.length);
 
   return (
-    <>
+    <div
+      key={pageIndex}
+      className="starting:opacity-25 opacity-100 transition-opacity duration-200 ease-in"
+    >
       <h2 className="ml-12">Results: {results?.length}</h2>
       {/* Grid */}
       <div className="grid grid-cols-3 auto-rows-[35rem] gap-14">
         {displaySummaries.map((summary) => (
-          <PokemonSummaryCard
-            key={summary.name}
+          <PokemonSummaryLink
+            key={summary.id}
             summary={summary}
           />
         ))}
@@ -133,7 +141,7 @@ export const SearchResultsPage: React.FC = () => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

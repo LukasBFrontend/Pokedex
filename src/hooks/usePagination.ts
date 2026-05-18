@@ -1,6 +1,6 @@
 import { useCallback, useEffect, type Dispatch, type SetStateAction } from "react";
-import { useSearchParams } from "react-router";
 import { parsePageIndex, parseResultsPerPage } from "../utils";
+import { useIndexSearchParams } from "./useIndexSearchParams";
 
 export const RESULTS_PER_PAGE = 30;
 
@@ -12,13 +12,16 @@ type PaginationContextType = {
 };
 
 export const usePagination = (): PaginationContextType => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setIndexSearchParams, isIndexRoute] = useIndexSearchParams();
 
   const pageIndex = parsePageIndex(searchParams);
   const resultsPerPage = parseResultsPerPage(searchParams);
 
   useEffect(() => {
-    setSearchParams((prev) => {
+    if (!isIndexRoute) {
+      return;
+    }
+    setIndexSearchParams((prev) => {
       if (prev.get("index") != null) {
         return prev;
       }
@@ -30,11 +33,11 @@ export const usePagination = (): PaginationContextType => {
       }
       return next;
     });
-  }, [setSearchParams]);
+  }, [isIndexRoute, setIndexSearchParams]);
 
   const setPageIndex = useCallback<Dispatch<SetStateAction<number>>>(
     (value) => {
-      setSearchParams((prev) => {
+      setIndexSearchParams((prev) => {
         const next = new URLSearchParams(prev);
         const current = parsePageIndex(prev);
         const index = typeof value === "function" ? value(current) : value;
@@ -42,12 +45,12 @@ export const usePagination = (): PaginationContextType => {
         return next;
       });
     },
-    [setSearchParams],
+    [setIndexSearchParams],
   );
 
   const setResultsPerPage = useCallback<Dispatch<SetStateAction<number>>>(
     (value) => {
-      setSearchParams((prev) => {
+      setIndexSearchParams((prev) => {
         const next = new URLSearchParams(prev);
         const current = parseResultsPerPage(prev);
         const perPage = typeof value === "function" ? value(current) : value;
@@ -55,7 +58,7 @@ export const usePagination = (): PaginationContextType => {
         return next;
       });
     },
-    [setSearchParams],
+    [setIndexSearchParams],
   );
 
   return {

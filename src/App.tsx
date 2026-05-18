@@ -1,11 +1,14 @@
 import { Outlet } from "react-router";
 import { Navbar } from "./components/Navbar";
 import Footer from "./components/Footer";
+import { useViewTransitionBackGuard } from "./utils/viewTransitionBack";
 
 const App: React.FC = () => {
+  useViewTransitionBackGuard();
+
   return (
     <>
-      <header className="sticky top-0 z-10 w-full py-6 backdrop-blur-md bg-light-gray/75">
+      <header className="app-header sticky top-0 z-10 w-full py-6 backdrop-blur-md bg-light-gray/75">
         <div className="max-w-[var(--page-max-width)] mx-auto px-6 flex justify-between items-center gap-8">
           <h1>Pokédex</h1>
           <Navbar />

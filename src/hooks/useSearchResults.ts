@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
 import { FetchPokemons } from "../api/api";
 import type { NamedApiResource } from "../api/types";
+import { useIndexSearchParams } from "./useIndexSearchParams";
 
 export type SearchResultsContextType = {
   results: NamedApiResource[] | null;
@@ -14,9 +14,7 @@ export const useSearchResults = (): SearchResultsContextType => {
     setPokemon,
   ] = useState<NamedApiResource[]>();
 
-  const [
-    searchParams,
-  ] = useSearchParams();
+  const [searchParams] = useIndexSearchParams();
 
   const filteredPokemon = useMemo(() => {
     const querystring = searchParams.get("q");

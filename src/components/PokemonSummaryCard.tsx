@@ -1,5 +1,17 @@
-import React from "react";
-import type { PokemonSummary } from "./types";
+import React, { type ReactNode } from "react";
+import type { PokemonSummary } from "./pages/search_results/types";
+
+type TransitionProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export const PokemonSummaryCardTransition = ({
+  children,
+  className = "h-full w-full",
+}: TransitionProps): React.JSX.Element => (
+  <div className={`pokemon-summary-card-view-transition ${className}`}>{children}</div>
+);
 
 type TitleVariant = "md" | "lg";
 
@@ -18,7 +30,7 @@ export const PokemonSummaryCard: React.FC<Props> = ({
   titleVariant = "md",
 }) => {
   return (
-    <section className="h-full flex flex-col justify-between items-center rounded-2xl p-6 bg-light-gray opacity-75 hover:shadow-2xl hover:opacity-100">
+    <section className="transition-all ease-in-out h-full flex flex-col justify-between items-center rounded-2xl p-6 bg-light-gray opacity-75 hover:shadow-2xl hover:opacity-100">
       <h3 className={titleClassName[titleVariant]}>
         {summary.name} <span className="text-gray-500">#{summary.id}</span>
       </h3>

@@ -1,37 +1,40 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useEffect, useState } from "react";
+import { usePokemonDetails, usePokemonSpecies, usePokemonTypes } from "../../../hooks";
+import {
+  PokemonSummaryCard,
+  PokemonSummaryCardSkeleton,
+  PokemonSummaryCardTransition,
+} from "../../PokemonSummaryCard";
+import {
+  clearEntryViewTransition,
+  markEntryViewTransition,
+} from "../../../utils/viewTransitionBack";
 import {
   FetchPokemonDetails,
   FetchPokemonSpecies,
   FetchPokemonType,
 } from "../../../api/api";
+import {
+  getEnglishDescription,
+  getPokemonTypeFromUrl,
+  summaryFromCache,
+} from "../../../utils";
 import type {
   FetchPokemonDetailsResponse,
   FetchPokemonSpeciesResponse,
   FetchPokemonTypeResponse,
 } from "../../../api/types";
+import type { PokemonMetaData } from "./types";
+import type { PokemonSummary } from "../search_results/types";
 import { API_BASE_URL } from "../../../constants";
-import { usePokemonDetails } from "../../../hooks/usePokemonDetails";
-import { usePokemonSpecies } from "../../../hooks/usePokemonSpecies";
-import { usePokemonTypes } from "../../../hooks/usePokemonTypes";
-import {
-  getEnglishDescription,
-  getPokemonIdFromUrl,
-  getPokemonTypeFromUrl,
-} from "../../../utils";
-import type { pokemonMetaData } from "./types";
-import {
-  PokemonSummaryCard,
-  PokemonSummaryCardSkeleton,
-} from "../search_results/PokemonSummaryCard";
-
-type Props = {};
+import { ArrowBack, ArrowForward, ArrowLeft, ArrowRight } from "@mui/icons-material";
 
 const formatMetaData = (
   pokemon: FetchPokemonDetailsResponse,
   types: FetchPokemonTypeResponse[],
   species: FetchPokemonSpeciesResponse,
-): pokemonMetaData => ({
+): PokemonMetaData => ({
   id: pokemon.id,
   name: pokemon.name,
   artworkURL: pokemon.sprites.other["official-artwork"].front_default,
@@ -41,13 +44,26 @@ const formatMetaData = (
   description: getEnglishDescription(species),
 });
 
-const Entry: React.FC<Props> = () => {
+const EntryPage: React.FC = () => {
   const { id } = useParams();
   const { pokemonType } = usePokemonTypes();
   const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
   const { pokemonSpecies, setPokemonSpecies } = usePokemonSpecies();
 
-  const [pokemonMeta, setPokemonMeta] = useState<pokemonMetaData>();
+  const [pokemonMeta, setPokemonMeta] = useState<PokemonMetaData>();
+
+  useEffect(() => {
+    markEntryViewTransition();
+    window.scrollTo(0, 0);
+    return clearEntryViewTransition;
+  }, []);
+
+  const pokemonId = id != null ? Number(id) : NaN;
+  const cachedPokemon = !Number.isNaN(pokemonId) ? pokemonDetails(pokemonId) : null;
+  const cachedSummary: PokemonSummary | null = summaryFromCache(
+    cachedPokemon,
+    pokemonType,
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -99,7 +115,9 @@ const Entry: React.FC<Props> = () => {
         return;
       }
 
-      setPokemonMeta(formatMetaData(pokemon, types, species));
+      setPokemonMeta(
+        formatMetaData(pokemon, types as FetchPokemonTypeResponse[], species),
+      );
     };
 
     void loadMetaData();
@@ -116,16 +134,39 @@ const Entry: React.FC<Props> = () => {
     pokemonType,
   ]);
 
+  const cardSummary: PokemonSummary | null = pokemonMeta ?? cachedSummary;
+
   return (
     <>
-      {pokemonMeta == null ? (
-        <PokemonSummaryCardSkeleton titleVariant="lg" />
-      ) : (
-        <PokemonSummaryCard
-          summary={pokemonMeta}
-          titleVariant="lg"
-        />
-      )}
+      <div className="entry-pokemon-card">
+        <PokemonSummaryCardTransition className="w-full">
+          {cardSummary != null ? (
+            <PokemonSummaryCard
+              summary={cardSummary}
+              titleVariant="lg"
+            />
+          ) : (
+            <PokemonSummaryCardSkeleton titleVariant="lg" />
+          )}
+        </PokemonSummaryCardTransition>
+      </div>
+      <div className="w-full my-8 flex justify-between">
+        <Link
+          className="tw-flex tw-items-center"
+          to={pokemonMeta ? `/pokemon/${pokemonMeta.id - 1}` : ""}
+          viewTransition
+        >
+          <ArrowLeft /> Back
+        </Link>
+        <Link
+          className="tw-flex tw-items-center"
+          to={pokemonMeta ? `/pokemon/${pokemonMeta.id + 1}` : ""}
+          viewTransition
+        >
+          Next <ArrowRight />{" "}
+        </Link>
+      </div>
+
       <hr className="my-8 text-secondary" />
       <div className="px-8">
         {pokemonMeta != null && (
@@ -146,4 +187,4 @@ const Entry: React.FC<Props> = () => {
   );
 };
 
-export default Entry;
+export default EntryPage;

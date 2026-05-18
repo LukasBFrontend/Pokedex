@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Search } from "@mui/icons-material";
-import { SearchPaginator } from "./pages/search_results/SearchPaginator";
-import { useSearchParams } from "react-router";
-import { usePagination } from "../hooks/usePagination";
+import { SearchPaginator } from "./pages/search_results";
+import { usePagination, useIndexSearchParams } from "../hooks";
 import { useSearchResults } from "../hooks/useSearchResults";
 
 export const Navbar: React.FC = () => {
@@ -12,10 +11,7 @@ export const Navbar: React.FC = () => {
     searchInput,
     setSearchInput,
   ] = useState<string>("");
-  const [
-    ,
-    setSearchParams,
-  ] = useSearchParams();
+  const [, setIndexSearchParams, isIndexRoute] = useIndexSearchParams();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchInput(e.currentTarget.value);
@@ -23,7 +19,7 @@ export const Navbar: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    setSearchParams((prev) => {
+    setIndexSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       next.set("index", "1");
       if (searchInput.trim() !== "") {
@@ -38,12 +34,14 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav className="flex items-center gap-5">
-      <SearchPaginator
-        index={pageIndex}
-        results={count ?? 0}
-        resultsPerPage={resultsPerPage}
-        setPageIndex={setPageIndex}
-      />
+      {isIndexRoute && (
+        <SearchPaginator
+          index={pageIndex}
+          results={count ?? 0}
+          resultsPerPage={resultsPerPage}
+          setPageIndex={setPageIndex}
+        />
+      )}
       <form
         className="p-4 rounded-2xl bg-white/85"
         onSubmit={handleSubmit}
