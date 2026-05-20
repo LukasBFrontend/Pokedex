@@ -4,8 +4,15 @@ type Props = {};
 
 const Footer: React.FC<Props> = () => {
   return (
-    <footer>
-      <div className="max-w-[var(--page-max-width)] mx-auto py-10 text-center">
+    <footer className="w-full">
+      <div
+        className={[
+          "max-w-[var(--page-max-width)]",
+          "mx-auto",
+          "px-6",
+          "text-center",
+        ].join(" ")}
+      >
         <small>Connected to PokéAPI</small>
       </div>
     </footer>

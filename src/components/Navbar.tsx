@@ -33,7 +33,15 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="flex items-center gap-5">
+    <nav
+      className={[
+        "h-full",
+        "py-4.5",
+        "flex",
+        "items-center",
+        "gap-5",
+      ].join(" ")}
+    >
       {isIndexRoute && (
         <SearchPaginator
           index={pageIndex}
@@ -43,11 +51,18 @@ export const Navbar: React.FC = () => {
         />
       )}
       <form
-        className="p-4 rounded-2xl bg-white/85"
+        className={[
+          "h-full",
+          "p-4",
+          "rounded-2xl",
+          "bg-white",
+          "shadow-sm",
+        ].join(" ")}
         onSubmit={handleSubmit}
       >
         <input
-          className="w-100 focus:outline-0"
+          placeholder="Search for a pokemon..."
+          className="h-full w-100 focus:outline-0"
           type="search"
           onChange={handleInputChange}
         />

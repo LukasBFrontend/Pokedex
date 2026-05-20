@@ -42,14 +42,14 @@ export const SearchPaginator: React.FC<Props> = ({
         type="button"
         onClick={(e) => handleNavigationClick(e, isCurrentIndex, index)}
         className={[
-          isCurrentIndex ? "text-blue-500" : "",
+          "opacity-75",
           "px-3",
           "pb-1",
           "flex",
           "justify-center",
           "items-center",
-          "opacity-75",
           "hover:opacity-100",
+          isCurrentIndex ? "text-primary" : "",
         ].join(" ")}
       >
         {index}
@@ -63,10 +63,10 @@ export const SearchPaginator: React.FC<Props> = ({
       disabled={isFirstPage}
       onClick={(e) => handleNavigationClick(e, false, currentIndex - 1)}
       className={[
+        "opacity-75",
         "flex",
         "justify-center",
         "items-center",
-        "opacity-75",
         "hover:opacity-100",
         "disabled:opacity-25",
       ].join(" ")}
@@ -81,10 +81,10 @@ export const SearchPaginator: React.FC<Props> = ({
       disabled={isLastPage}
       onClick={(e) => handleNavigationClick(e, false, currentIndex + 1)}
       className={[
+        "opacity-75",
         "flex",
         "justify-center",
         "items-center",
-        "opacity-75",
         "hover:opacity-100",
         "disabled:opacity-25",
       ].join(" ")}
@@ -97,7 +97,22 @@ export const SearchPaginator: React.FC<Props> = ({
   const pageIndices = Array.from({ length: pageCount }, (_, i) => i + 1);
 
   return (
-    <div className="w-fit py-4 px-5 flex items-center gap-5 rounded-2xl text-2xl leading-none bg-white/75">
+    <div
+      className={[
+        "w-fit",
+        "h-full",
+        "py-4",
+        "px-5",
+        "flex",
+        "items-center",
+        "gap-5",
+        "rounded-2xl",
+        "shadow-sm",
+        "bg-white",
+        "text-2xl",
+        "leading-none",
+      ].join(" ")}
+    >
       {renderPreviousButton()}
       {pageIndices.map(renderNavigationButton)}
       {renderNextButton()}

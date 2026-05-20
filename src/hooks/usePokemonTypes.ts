@@ -1,17 +1,17 @@
 import { useCallback, useEffect } from "react";
 import { FetchPokemonType } from "../api/api";
-import type { FetchPokemonTypeResponse } from "../api/types";
 import { TYPE_URLS, type pokemonType } from "../constants";
 import { getPokemonTypeFromUrl } from "../utils";
+import type { FetchPokemonTypeResponse } from "../api/types";
 
 const typeCache = new Map<pokemonType, FetchPokemonTypeResponse>();
 
-type pokemonTypesContextType = {
+type PokemonTypesContextType = {
   pokemonType: (type: pokemonType) => FetchPokemonTypeResponse | null;
   setPokemonType: (type: FetchPokemonTypeResponse) => void;
 };
 
-export const usePokemonTypes = (): pokemonTypesContextType => {
+export const usePokemonTypes = (): PokemonTypesContextType => {
   const pokemonType = useCallback(
     (type: pokemonType): FetchPokemonTypeResponse | null => {
       if (type == null) {

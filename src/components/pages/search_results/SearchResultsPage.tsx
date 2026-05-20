@@ -12,11 +12,10 @@ import {
   PokemonSummaryCardSkeleton,
   PokemonSummaryCardTransition,
 } from "../../PokemonSummaryCard";
+import { NavLink } from "react-router";
+import { GRID_ROW_SIZE } from "../../../constants";
 import type { PokemonSummary } from "./types";
 import type { FetchPokemonTypeResponse } from "../../../api/types";
-import { NavLink } from "react-router";
-
-const ROW_SIZE = 3;
 
 const PokemonSummaryLink: React.FC<{ summary: PokemonSummary }> = ({ summary }) => {
   const href = `/pokemon/${summary.id}`;
@@ -26,7 +25,12 @@ const PokemonSummaryLink: React.FC<{ summary: PokemonSummary }> = ({ summary }) 
       to={href}
       viewTransition
       className={({ isTransitioning }) =>
-        `block h-full min-h-0${isTransitioning ? " transitioning" : ""}`
+        [
+          "block",
+          "h-full",
+          "min-h-0",
+          isTransitioning ? "transitioning" : "",
+        ].join(" ")
       }
     >
       <PokemonSummaryCardTransition>
@@ -53,7 +57,7 @@ export const SearchResultsPage: React.FC = () => {
       const mappedSummaries: PokemonSummary[] = [];
 
       const fetchRow = async (startIndex: number): Promise<void> => {
-        for (let i = startIndex; i < startIndex + ROW_SIZE; i++) {
+        for (let i = startIndex; i < startIndex + GRID_ROW_SIZE; i++) {
           if (i >= results.length) {
             break;
           }
@@ -87,7 +91,7 @@ export const SearchResultsPage: React.FC = () => {
       const start = resultsPerPage * (pageIndex - 1);
       const end = Math.min(results.length, resultsPerPage * pageIndex);
 
-      for (let i = start; i < end; i += ROW_SIZE) {
+      for (let i = start; i < end; i += GRID_ROW_SIZE) {
         if (cancelled) {
           return;
         }
@@ -124,11 +128,23 @@ export const SearchResultsPage: React.FC = () => {
   return (
     <div
       key={pageIndex}
-      className="starting:opacity-25 opacity-100 transition-opacity duration-200 ease-in"
+      className={[
+        "opacity-100",
+        "starting:opacity-25",
+        "transition-opacity",
+        "duration-200",
+        "ease-in",
+      ].join(" ")}
     >
-      <h2 className="ml-12">Results: {results?.length}</h2>
-      {/* Grid */}
-      <div className="grid grid-cols-3 auto-rows-[35rem] gap-14">
+      <h2 className="ml-12 text-black/75">Results: {results?.length}</h2>
+      <div
+        className={[
+          "grid",
+          `grid-cols-${JSON.stringify(GRID_ROW_SIZE)}`,
+          "auto-rows-[35rem]",
+          "gap-14",
+        ].join(" ")}
+      >
         {displaySummaries.map((summary) => (
           <PokemonSummaryLink
             key={summary.id}

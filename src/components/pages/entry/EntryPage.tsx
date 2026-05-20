@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { usePokemonDetails, usePokemonSpecies, usePokemonTypes } from "../../../hooks";
 import {
@@ -18,35 +18,36 @@ import {
 import {
   getEnglishDescription,
   getPokemonTypeFromUrl,
+  mergeTypeDamageRelations,
   summaryFromCache,
 } from "../../../utils";
+import { API_BASE_URL, type pokemonType } from "../../../constants";
+import { EntryPageNav, EntryResistanceGroup } from ".";
 import type {
   FetchPokemonDetailsResponse,
   FetchPokemonSpeciesResponse,
   FetchPokemonTypeResponse,
 } from "../../../api/types";
-import type { PokemonMetaData } from "./types";
+import type { PokemonMetaData, TypeRelations } from "./types";
 import type { PokemonSummary } from "../search_results/types";
-import { API_BASE_URL } from "../../../constants";
-import { ArrowBack, ArrowForward, ArrowLeft, ArrowRight } from "@mui/icons-material";
 
 const formatMetaData = (
   pokemon: FetchPokemonDetailsResponse,
   types: FetchPokemonTypeResponse[],
+  damageRelations: TypeRelations,
   species: FetchPokemonSpeciesResponse,
 ): PokemonMetaData => ({
   id: pokemon.id,
   name: pokemon.name,
   artworkURL: pokemon.sprites.other["official-artwork"].front_default,
-  typeNameURLs: types.map(
-    (type) => type?.sprites["generation-viii"]["sword-shield"].name_icon,
-  ),
+  typeSprites: types.map((type) => type?.sprites),
+  typeRelationsSprites: damageRelations,
   description: getEnglishDescription(species),
 });
 
 const EntryPage: React.FC = () => {
   const { id } = useParams();
-  const { pokemonType } = usePokemonTypes();
+  const { pokemonType, setPokemonType } = usePokemonTypes();
   const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
   const { pokemonSpecies, setPokemonSpecies } = usePokemonSpecies();
 
@@ -89,16 +90,56 @@ const EntryPage: React.FC = () => {
         return;
       }
 
+      const typeByUrl = new Map<string, FetchPokemonTypeResponse>();
+
       const types = await Promise.all(
         pokemon.types.map(async (slot) => {
-          const type = getPokemonTypeFromUrl(slot.type.url);
+          const cached = typeByUrl.get(slot.type.url);
+          if (cached != null) {
+            return cached;
+          }
+
+          const type =
+            getPokemonTypeFromUrl(slot.type.url) ?? (slot.type.name as pokemonType);
           let typeResponse = pokemonType(type);
 
           if (typeResponse == null) {
             typeResponse = await FetchPokemonType(slot.type.url);
+            setPokemonType(typeResponse);
           }
+
+          typeByUrl.set(slot.type.url, typeResponse);
           return typeResponse;
         }),
+      );
+
+      const incomingTypeUrls = new Set<string>();
+      for (const defendingType of types) {
+        for (const key of [
+          "double_damage_from",
+          "half_damage_from",
+          "no_damage_from",
+        ] as const) {
+          for (const resource of defendingType.damage_relations[key]) {
+            incomingTypeUrls.add(resource.url);
+          }
+        }
+      }
+
+      await Promise.all(
+        [...incomingTypeUrls].map(async (url) => {
+          if (typeByUrl.has(url)) {
+            return;
+          }
+          const typeResponse = await FetchPokemonType(url);
+          setPokemonType(typeResponse);
+          typeByUrl.set(url, typeResponse);
+        }),
+      );
+
+      const damageRelations = mergeTypeDamageRelations(
+        types,
+        (url) => typeByUrl.get(url) ?? null,
       );
 
       if (cancelled) {
@@ -115,9 +156,7 @@ const EntryPage: React.FC = () => {
         return;
       }
 
-      setPokemonMeta(
-        formatMetaData(pokemon, types as FetchPokemonTypeResponse[], species),
-      );
+      setPokemonMeta(formatMetaData(pokemon, types, damageRelations, species));
     };
 
     void loadMetaData();
@@ -132,6 +171,7 @@ const EntryPage: React.FC = () => {
     pokemonSpecies,
     setPokemonSpecies,
     pokemonType,
+    setPokemonType,
   ]);
 
   const cardSummary: PokemonSummary | null = pokemonMeta ?? cachedSummary;
@@ -150,24 +190,12 @@ const EntryPage: React.FC = () => {
           )}
         </PokemonSummaryCardTransition>
       </div>
-      <div className="w-full my-8 flex justify-between">
-        <Link
-          className="tw-flex tw-items-center"
-          to={pokemonMeta ? `/pokemon/${pokemonMeta.id - 1}` : ""}
-          viewTransition
-        >
-          <ArrowLeft /> Back
-        </Link>
-        <Link
-          className="tw-flex tw-items-center"
-          to={pokemonMeta ? `/pokemon/${pokemonMeta.id + 1}` : ""}
-          viewTransition
-        >
-          Next <ArrowRight />{" "}
-        </Link>
-      </div>
+      <EntryPageNav
+        enabled={Boolean(pokemonMeta)}
+        prevIndex={pokemonId - 1}
+        nextIndex={pokemonId + 1}
+      />
 
-      <hr className="my-8 text-secondary" />
       <div className="px-8">
         {pokemonMeta != null && (
           <blockquote className="text-2xl">
@@ -177,10 +205,32 @@ const EntryPage: React.FC = () => {
         <hr className="my-8 text-transparent" />
         <section>
           <h3>Weaknesses</h3>
+          <div className={["flex", "items-end", "gap-4"].join(" ")}>
+            <EntryResistanceGroup
+              multiplier={2}
+              sprites={pokemonMeta?.typeRelationsSprites.weakness}
+            />
+            <EntryResistanceGroup
+              multiplier={4}
+              sprites={pokemonMeta?.typeRelationsSprites.doubleWeakness}
+              emphasized
+            />
+          </div>
         </section>
         <hr className="my-8 text-transparent" />
         <section>
           <h3>Resistances</h3>
+          <div className={["flex", "flex-wrap", "gap-4"].join(" ")}>
+            <EntryResistanceGroup
+              multiplier={0.5}
+              sprites={pokemonMeta?.typeRelationsSprites.resistance}
+            />
+            <EntryResistanceGroup
+              multiplier={0.25}
+              sprites={pokemonMeta?.typeRelationsSprites.doubleResistance}
+              emphasized
+            />
+          </div>
         </section>
       </div>
     </>

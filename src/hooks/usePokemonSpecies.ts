@@ -1,18 +1,18 @@
 import { useCallback, useEffect } from "react";
 import { FetchPokemonDetails, FetchPokemonSpecies } from "../api/api";
-import type { FetchPokemonSpeciesResponse } from "../api/types";
 import { getPokemonIdFromUrl } from "../utils";
 import { usePokemonDetails } from "./usePokemonDetails";
 import { useSearchResults } from "./useSearchResults";
+import type { FetchPokemonSpeciesResponse } from "../api/types";
 
 const speciesCache = new Map<number, FetchPokemonSpeciesResponse>();
 
-type pokemonSpeciesContextType = {
+type PokemonSpeciesContextType = {
   pokemonSpecies: (id: number) => FetchPokemonSpeciesResponse | null;
   setPokemonSpecies: (species: FetchPokemonSpeciesResponse) => void;
 };
 
-export const usePokemonSpecies = (): pokemonSpeciesContextType => {
+export const usePokemonSpecies = (): PokemonSpeciesContextType => {
   const { results } = useSearchResults();
   const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
 

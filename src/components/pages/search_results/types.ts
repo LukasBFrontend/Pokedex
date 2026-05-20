@@ -1,6 +1,8 @@
+import type { PokemonTypeSprites } from "../../../api/types";
+
 export type PokemonSummary = {
   id: number;
   name: string;
-  typeNameURLs: string[];
+  typeSprites: PokemonTypeSprites[];
   artworkURL: string;
 };

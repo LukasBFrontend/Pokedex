@@ -162,7 +162,7 @@ export type FetchPokemonDetailsResponse = {
   weight: number;
 };
 
-type TypeDamageRelations = {
+export type TypeDamageRelations = {
   double_damage_from: NamedApiResource[];
   double_damage_to: NamedApiResource[];
   half_damage_from: NamedApiResource[];
@@ -236,7 +236,7 @@ type TypeSpritesGenerationIX = {
   "scarlet-violet": TypeSpriteIcons;
 };
 
-type PokemonTypeSprites = {
+export type PokemonTypeSprites = {
   "generation-iii": TypeSpritesGenerationIII;
   "generation-iv": TypeSpritesGenerationIV;
   "generation-v": TypeSpritesGenerationV;

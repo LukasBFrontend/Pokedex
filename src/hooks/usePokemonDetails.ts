@@ -6,12 +6,12 @@ import type { FetchPokemonDetailsResponse } from "../api/types";
 
 const detailsCache = new Map<number, FetchPokemonDetailsResponse>();
 
-type pokemonDetailsContextType = {
+type PokemonDetailsContextType = {
   pokemonDetails: (id: number) => FetchPokemonDetailsResponse | null;
   setPokemonDetails: (details: FetchPokemonDetailsResponse) => void;
 };
 
-export const usePokemonDetails = (): pokemonDetailsContextType => {
+export const usePokemonDetails = (): PokemonDetailsContextType => {
   const { results } = useSearchResults();
   const pokemonDetails = useCallback(
     (id: number): FetchPokemonDetailsResponse | null => {

@@ -1,7 +1,18 @@
+import type { PokemonTypeSprites } from "../../../api/types";
+
 export type PokemonMetaData = {
   id: number;
   name: string;
-  typeNameURLs: string[];
+  typeSprites: PokemonTypeSprites[];
+  typeRelationsSprites: TypeRelations;
   artworkURL: string;
-  description: string;
+  description: string; 
+};
+
+export type TypeRelations = {
+  weakness: PokemonTypeSprites[];
+  doubleWeakness: PokemonTypeSprites[];
+  resistance: PokemonTypeSprites[];
+  doubleResistance: PokemonTypeSprites[];
+  immuneTo: PokemonTypeSprites[];
 };

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { FetchPokemons } from "../api/api";
-import type { NamedApiResource } from "../api/types";
 import { useIndexSearchParams } from "./useIndexSearchParams";
+import type { NamedApiResource } from "../api/types";
 
 export type SearchResultsContextType = {
   results: NamedApiResource[] | null;
