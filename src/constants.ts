@@ -1,6 +1,6 @@
 export const API_BASE_URL = "https://pokeapi.co/api/v2/";
 export const RESULTS_PER_PAGE = 30;
-export const GRID_ROW_SIZE = 3;
+export const SEARCH_GRID_COLS = 3; // should match css variable --search-grid-cols
 
 export const TYPE_URLS = {
   Normal: `${API_BASE_URL}type/normal`,

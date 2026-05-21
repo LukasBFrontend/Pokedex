@@ -13,7 +13,7 @@ import {
   PokemonSummaryCardTransition,
 } from "../../PokemonSummaryCard";
 import { NavLink } from "react-router";
-import { GRID_ROW_SIZE } from "../../../constants";
+import { SEARCH_GRID_COLS } from "../../../constants";
 import type { PokemonSummary } from "./types";
 import type { FetchPokemonTypeResponse } from "../../../api/types";
 
@@ -57,7 +57,7 @@ export const SearchResultsPage: React.FC = () => {
       const mappedSummaries: PokemonSummary[] = [];
 
       const fetchRow = async (startIndex: number): Promise<void> => {
-        for (let i = startIndex; i < startIndex + GRID_ROW_SIZE; i++) {
+        for (let i = startIndex; i < startIndex + SEARCH_GRID_COLS; i++) {
           if (i >= results.length) {
             break;
           }
@@ -91,7 +91,7 @@ export const SearchResultsPage: React.FC = () => {
       const start = resultsPerPage * (pageIndex - 1);
       const end = Math.min(results.length, resultsPerPage * pageIndex);
 
-      for (let i = start; i < end; i += GRID_ROW_SIZE) {
+      for (let i = start; i < end; i += SEARCH_GRID_COLS) {
         if (cancelled) {
           return;
         }
@@ -140,7 +140,7 @@ export const SearchResultsPage: React.FC = () => {
       <div
         className={[
           "grid",
-          `grid-cols-${JSON.stringify(GRID_ROW_SIZE)}`,
+          "grid-cols-(--search-grid-cols)",
           "auto-rows-[35rem]",
           "gap-14",
         ].join(" ")}

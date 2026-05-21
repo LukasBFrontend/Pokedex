@@ -4,24 +4,43 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
 }
 
-export const Button: React.FC<Props> = ({ variant = "primary", ...props }) => {
+export const Button: React.FC<Props> = ({
+  variant = "primary",
+  children,
+  ...props
+}) => {
   return (
     <button
       className={[
-        "rounded-md",
-        "opacity-75",
-        "px-3.5",
-        "py-2.5",
-        "flex",
-        "gap-2",
+        "-skew-x-20",
+        "inline-flex",
+        "items-center",
+        "justify-center",
+        "px-4",
+        "py-1.5",
         "uppercase",
-        "transition:opacity",
+        "transition-all",
         "hover:opacity-100",
         "hover:cursor-pointer",
-        "hover:bg-secondary/50",
-        "[&>svg]:-mx-2",
+        "hover:text-white",
+        "hover:bg-accent",
+        variant === "secondary" ? "bg-black/75" : "",
+        variant === "secondary" ? "" : "opacity-75",
+        variant === "secondary" ? "text-white" : "",
       ].join(" ")}
       {...props}
-    ></button>
+    >
+      <span
+        className={[
+          "inline-flex",
+          "skew-x-20",
+          "items-center",
+          "gap-2",
+          "[&>svg]:-mx-2",
+        ].join(" ")}
+      >
+        {children}
+      </span>
+    </button>
   );
 };

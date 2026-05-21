@@ -24,7 +24,6 @@ export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex })
       <Link
         className="tw-flex tw-items-center"
         to={enabled ? `/pokemon/${prevIndex}` : ""}
-        viewTransition
       >
         <Button>
           <ArrowLeft /> Prev
@@ -34,7 +33,6 @@ export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex })
       <Link
         className="tw-flex tw-items-center"
         to={enabled ? `/pokemon/${nextIndex}` : ""}
-        viewTransition
       >
         <Button>
           Next <ArrowRight />

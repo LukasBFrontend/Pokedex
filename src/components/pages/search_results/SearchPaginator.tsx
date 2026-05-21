@@ -48,8 +48,9 @@ export const SearchPaginator: React.FC<Props> = ({
           "flex",
           "justify-center",
           "items-center",
-          "hover:opacity-100",
+          "hover:text-primary",
           isCurrentIndex ? "text-primary" : "",
+          isCurrentIndex ? "opacity-100" : "",
         ].join(" ")}
       >
         {index}
@@ -68,6 +69,7 @@ export const SearchPaginator: React.FC<Props> = ({
         "justify-center",
         "items-center",
         "hover:opacity-100",
+        "hober:text-accent",
         "disabled:opacity-25",
       ].join(" ")}
     >
@@ -86,6 +88,7 @@ export const SearchPaginator: React.FC<Props> = ({
         "justify-center",
         "items-center",
         "hover:opacity-100",
+        "hober:text-accent",
         "disabled:opacity-25",
       ].join(" ")}
     >
@@ -106,8 +109,7 @@ export const SearchPaginator: React.FC<Props> = ({
         "flex",
         "items-center",
         "gap-5",
-        "rounded-2xl",
-        "shadow-sm",
+        "rounded-full",
         "bg-white",
         "text-2xl",
         "leading-none",
