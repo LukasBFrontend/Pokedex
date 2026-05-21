@@ -15,8 +15,6 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
   --page-max-width: 100rem;
-  --app-header-height: 6.5rem;
-  --app-footer-height: 6.5rem;
   --text-primary: rgb(25, 25, 25);
   --search-grid-cols: repeat(3, minmax(0, 1fr));
 

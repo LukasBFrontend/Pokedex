@@ -39,7 +39,6 @@ export const PokemonSummaryCard: React.FC<Props> = ({
         "flex-col",
         "justify-between",
         "items-center",
-        /* "bg-light-gray", */
         "transition-all",
         "ease-in-out",
         "hover:opacity-100",

@@ -13,10 +13,12 @@ const App: React.FC = () => {
         "app-main-background",
         "grid",
         "grid-cols-[1fr_min(100%,var(--page-max-width))_1fr]",
-        "grid-rows-[var(--app-header-height)_auto]",
+        "grid-rows-[auto_minmax(0,1fr)_auto]",
         "h-dvh",
         "w-full",
+        "py-6",
         "overflow-hidden",
+        "gap-6",
       ].join(" ")}
     >
       <header
@@ -25,7 +27,6 @@ const App: React.FC = () => {
           "z-100",
           "col-span-3",
           "flex",
-          "h-[var(--app-header-height)]",
           "shrink-0",
           "items-center",
           "w-full",
@@ -60,16 +61,7 @@ const App: React.FC = () => {
           <Navbar />
         </div>
       </header>
-      <div
-        className={[
-          "col-span-3",
-          "row-start-2",
-          "grid",
-          "grid-cols-subgrid",
-          "h-[calc(100dvh-var(--app-header-height)-var(--app-footer-height))]",
-          "min-h-0",
-        ].join(" ")}
-      >
+   
         {useLocation().pathname !== "/" && (
           <aside
             className={[
@@ -98,44 +90,8 @@ const App: React.FC = () => {
             </span>
           </aside>
         )}
-        <article
-          className={[
-            "scrollbar",
-            "col-start-2",
-            "py-10",
-            "px-20",
-            "bg-white",
-            "rounded-2xl",
-            "border-x-1",
-            "border-secondary/75",
-            "overflow-y-auto",
-          ].join(" ")}
-        >
-          <Outlet />
-        </article>
-      </div>
-      <footer
-        className={[
-          "h-full",
-          "w-full",
-          "row-start-3",
-          "col-start-2",
-          "text-center",
-          "text-white",
-          "text-shadow-lg",
-        ].join(" ")}
-      >
-        <span
-          className={[
-            "bg-black/35",
-            "px-2.5",
-            "py-1.5",
-            "rounded-full",
-          ].join(" ")}
-        >
-          Connected to PokéAPI
-        </span>
-      </footer>
+
+        <Outlet />
     </div>
   );
 };

@@ -74,20 +74,11 @@ export const Navbar: React.FC = () => {
     <nav
       className={[
         "h-full",
-        "py-6",
         "flex",
         "items-center",
         "gap-5",
       ].join(" ")}
     >
-      {isIndexRoute && (
-        <SearchPaginator
-          index={pageIndex}
-          results={count ?? 0}
-          resultsPerPage={resultsPerPage}
-          setPageIndex={setPageIndex}
-        />
-      )}
       <form
         className={[
           "h-full",

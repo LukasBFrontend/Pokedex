@@ -16,6 +16,8 @@ import { NavLink } from "react-router";
 import { SEARCH_GRID_COLS } from "../../../constants";
 import type { PokemonSummary } from "./types";
 import type { FetchPokemonTypeResponse } from "../../../api/types";
+import { PageArticle, PageFooter } from "../../layout";
+import { SearchPaginator } from "./SearchPaginator";
 
 const PokemonSummaryLink: React.FC<{ summary: PokemonSummary }> = ({ summary }) => {
   const href = `/pokemon/${summary.id}`;
@@ -44,7 +46,7 @@ export const SearchResultsPage: React.FC = () => {
   const { pokemonType } = usePokemonTypes();
   const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
   const { results } = useSearchResults();
-  const { pageIndex, resultsPerPage } = usePagination();
+  const { pageIndex, setPageIndex, resultsPerPage } = usePagination();
   const [summaries, setSummaries] = useState<PokemonSummary[]>([]);
 
   useEffect(() => {
@@ -126,38 +128,50 @@ export const SearchResultsPage: React.FC = () => {
   const skeletonCount = Math.max(0, pageResultCount - displaySummaries.length);
 
   return (
-    <div
-      key={pageIndex}
-      className={[
-        "opacity-100",
-        "starting:opacity-25",
-        "transition-opacity",
-        "duration-200",
-        "ease-in",
-      ].join(" ")}
-    >
-      <h2 className="ml-12 text-black/75">Results: {results?.length}</h2>
-      <div
-        className={[
-          "grid",
-          "grid-cols-(--search-grid-cols)",
-          "auto-rows-[35rem]",
-          "gap-14",
-        ].join(" ")}
-      >
-        {displaySummaries.map((summary) => (
-          <PokemonSummaryLink
-            key={summary.id}
-            summary={summary}
-          />
-        ))}
-        {Array.from({ length: skeletonCount }, (_, index) => (
-          <PokemonSummaryCardSkeleton
-            key={`skeleton-${displaySummaries.length + index}`}
-          />
-        ))}
-      </div>
-    </div>
+    <>
+      <PageArticle>
+        <div
+          key={pageIndex}
+          className={[
+            "opacity-100",
+            "starting:opacity-25",
+            "transition-opacity",
+            "duration-200",
+            "ease-in",
+          ].join(" ")}
+        >
+          <h2 className="ml-12 text-black/75">Results: {results?.length}</h2>
+          <div
+            className={[
+              "grid",
+              "grid-cols-(--search-grid-cols)",
+              "auto-rows-[35rem]",
+              "gap-14",
+            ].join(" ")}
+          >
+            {displaySummaries.map((summary) => (
+              <PokemonSummaryLink
+                key={summary.id}
+                summary={summary}
+              />
+            ))}
+            {Array.from({ length: skeletonCount }, (_, index) => (
+              <PokemonSummaryCardSkeleton
+                key={`skeleton-${displaySummaries.length + index}`}
+              />
+            ))}
+          </div>
+        </div>
+      </PageArticle>
+      <PageFooter>
+        <SearchPaginator
+          index={pageIndex}
+          results={results?.length ?? 0}
+          resultsPerPage={resultsPerPage}
+          setPageIndex={setPageIndex}
+        />
+      </PageFooter>
+    </>
   );
 };
 

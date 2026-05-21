@@ -22,6 +22,7 @@ import {
   summaryFromCache,
 } from "../../../utils";
 import { API_BASE_URL, type pokemonType } from "../../../constants";
+import { PageArticle, PageFooter } from "../../layout";
 import { EntryPageNav, EntryResistanceGroup } from ".";
 import type {
   FetchPokemonDetailsResponse,
@@ -178,61 +179,82 @@ const EntryPage: React.FC = () => {
 
   return (
     <>
-      <div className="entry-pokemon-card">
-        <PokemonSummaryCardTransition className="w-full">
-          {cardSummary != null ? (
-            <PokemonSummaryCard
-              summary={cardSummary}
-              titleVariant="lg"
-            />
-          ) : (
-            <PokemonSummaryCardSkeleton titleVariant="lg" />
-          )}
-        </PokemonSummaryCardTransition>
-      </div>
-      <EntryPageNav
-        enabled={Boolean(pokemonMeta)}
-        prevIndex={pokemonId - 1}
-        nextIndex={pokemonId + 1}
-      />
+      <PageArticle>
+        <div className="entry-pokemon-card">
+          <PokemonSummaryCardTransition className="w-full">
+            {cardSummary != null ? (
+              <PokemonSummaryCard
+                summary={cardSummary}
+                titleVariant="lg"
+              />
+            ) : (
+              <PokemonSummaryCardSkeleton titleVariant="lg" />
+            )}
+          </PokemonSummaryCardTransition>
+        </div>
+        <EntryPageNav
+          enabled={Boolean(pokemonMeta)}
+          prevIndex={pokemonId - 1}
+          nextIndex={pokemonId + 1}
+        />
 
-      <div className="px-8">
-        {pokemonMeta != null && (
-          <blockquote className="text-2xl">
-            <i>{pokemonMeta.description}</i>
-          </blockquote>
-        )}
-        <hr className="my-8 text-transparent" />
-        <section>
-          <h3>Weaknesses</h3>
-          <div className={["flex", "items-end", "gap-4"].join(" ")}>
-            <EntryResistanceGroup
-              multiplier={2}
-              sprites={pokemonMeta?.typeRelationsSprites.weakness}
-            />
-            <EntryResistanceGroup
-              multiplier={4}
-              sprites={pokemonMeta?.typeRelationsSprites.doubleWeakness}
-              emphasized
-            />
-          </div>
-        </section>
-        <hr className="my-8 text-transparent" />
-        <section>
-          <h3>Resistances</h3>
-          <div className={["flex", "flex-wrap", "gap-4"].join(" ")}>
-            <EntryResistanceGroup
-              multiplier={0.5}
-              sprites={pokemonMeta?.typeRelationsSprites.resistance}
-            />
-            <EntryResistanceGroup
-              multiplier={0.25}
-              sprites={pokemonMeta?.typeRelationsSprites.doubleResistance}
-              emphasized
-            />
-          </div>
-        </section>
-      </div>
+        <div className="px-8">
+          {pokemonMeta != null && (
+            <blockquote className="text-2xl">
+              <i>{pokemonMeta.description}</i>
+            </blockquote>
+          )}
+          <hr className="my-8 text-transparent" />
+          <section>
+            <h3>Weaknesses</h3>
+            <div className={["flex", "items-end", "gap-4"].join(" ")}>
+              <EntryResistanceGroup
+                multiplier={2}
+                sprites={pokemonMeta?.typeRelationsSprites.weakness}
+              />
+              <EntryResistanceGroup
+                multiplier={4}
+                sprites={pokemonMeta?.typeRelationsSprites.doubleWeakness}
+                emphasized
+              />
+            </div>
+          </section>
+          <hr className="my-8 text-transparent" />
+          <section>
+            <h3>Resistances</h3>
+            <div className={["flex", "flex-wrap", "gap-4"].join(" ")}>
+              <EntryResistanceGroup
+                multiplier={0.5}
+                sprites={pokemonMeta?.typeRelationsSprites.resistance}
+              />
+              <EntryResistanceGroup
+                multiplier={0.25}
+                sprites={pokemonMeta?.typeRelationsSprites.doubleResistance}
+                emphasized
+              />
+            </div>
+          </section>
+        </div>
+      </PageArticle>
+      <PageFooter
+        className={[
+          "w-full",
+          "text-center",
+          "text-white",
+          "text-shadow-lg",
+        ].join(" ")}
+      >
+        <span
+          className={[
+            "bg-black/35",
+            "px-2.5",
+            "py-1.5",
+            "rounded-full",
+          ].join(" ")}
+        >
+          Connected to PokéAPI
+        </span>
+      </PageFooter>
     </>
   );
 };

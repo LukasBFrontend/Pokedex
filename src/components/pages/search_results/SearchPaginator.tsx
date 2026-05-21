@@ -103,11 +103,13 @@ export const SearchPaginator: React.FC<Props> = ({
     <div
       className={[
         "w-fit",
+        "mx-auto",
         "h-full",
         "py-4",
         "px-5",
         "flex",
         "items-center",
+        "justify-center",
         "gap-5",
         "rounded-full",
         "bg-white",
