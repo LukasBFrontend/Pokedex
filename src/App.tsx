@@ -6,46 +6,74 @@ import { ArrowLeft } from "@mui/icons-material";
 
 const App: React.FC = () => {
   useViewTransitionBackGuard();
+  const { pathname } = useLocation();
 
   return (
     <div
       className={[
         "app-main-background",
-        "grid",
-        "grid-cols-[1fr_min(100%,var(--page-max-width))_1fr]",
-        "grid-rows-[auto_minmax(0,1fr)_auto]",
         "h-dvh",
         "w-full",
         "py-6",
         "overflow-hidden",
-        "gap-6",
       ].join(" ")}
     >
-      <header
+      <div
         className={[
-          "app-header",
-          "z-100",
-          "col-span-3",
-          "flex",
-          "shrink-0",
-          "items-center",
+          "mx-auto",
+          "grid",
+          "h-full",
+          "min-h-0",
           "w-full",
-          "shadow-sm",
+          "md:max-w-[var(--page-max-width-md)]",
+          "2xl:max-w-[var(--page-max-width)]",
+          "grid-rows-[auto_minmax(0,1fr)_auto]",
+          "gap-6",
         ].join(" ")}
       >
-        <div
+        <header
           className={[
-            "h-full",
-            "w-full",
-            "max-w-[var(--page-max-width)]",
-            "mx-auto",
+            "app-header",
+            "relative",
+            "z-100",
             "flex",
             "items-center",
             "justify-between",
             "gap-8",
             "px-6",
+            "shadow-sm",
           ].join(" ")}
         >
+          {pathname !== "/" && (
+            <aside
+              className={[
+                "absolute",
+                "top-15",
+                "-left-3",
+                "sm:top-22",
+                "sm:left-12",
+                "xl:top-30",
+                "xl:-left-35",
+                "z-10",
+                "w-60",
+                "-skew-x-20",
+                "xl:bg-white/90",
+                "py-10",
+                "px-8",
+                "flex",
+                "flex-col",
+              ].join(" ")}
+            >
+              <span className="skew-x-20 z-100">
+                <Link to="/">
+                  <Button variant="secondary">
+                    <ArrowLeft /> Home
+                  </Button>
+                </Link>
+              </span>
+            </aside>
+          )}
+
           <h1
             className={[
               "m-0",
@@ -59,39 +87,10 @@ const App: React.FC = () => {
             Poké<span className="text-primary">dex</span>
           </h1>
           <Navbar />
-        </div>
-      </header>
-   
-        {useLocation().pathname !== "/" && (
-          <aside
-            className={[
-              "-skew-x-20",
-              "mr-20",
-              "-ml-20",
-              "mt-20",
-              "bg-white/90",
-              "col-start-1",
-              "sticky",
-              "top-0",
-              "self-start",
-              "flex",
-              "flex-col",
-              "items-end",
-              "py-10",
-              "px-8",
-            ].join(" ")}
-          >
-            <span className="skew-x-20">
-              <Link to="/">
-                <Button variant="secondary">
-                  <ArrowLeft /> Home
-                </Button>
-              </Link>
-            </span>
-          </aside>
-        )}
+        </header>
 
         <Outlet />
+      </div>
     </div>
   );
 };

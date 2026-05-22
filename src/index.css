@@ -14,9 +14,12 @@
 	--sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
-  --page-max-width: 100rem;
+  --page-max-width: 90rem;
+  --page-max-width-md: 70rem;
   --text-primary: rgb(25, 25, 25);
-  --search-grid-cols: repeat(3, minmax(0, 1fr));
+  --search-grid-cols: repeat(1, minmax(0, 1fr));
+  --search-grid-cols-md: repeat(2, minmax(0, 1fr));
+  --search-grid-cols-lg: repeat(3, minmax(0, 1fr));
 
   color: var(--text-primary);
   font-synthesis: none;
@@ -125,6 +128,31 @@ a.transitioning .pokemon-summary-card-view-transition,
 }
 
 .scrollbar::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.scrollbar-x {
+  --scrollbar-x-size: 1rem;
+  padding-bottom: var(--scrollbar-x-size);
+  scrollbar-color: color-mix(in srgb, var(--color-secondary) 75%, transparent) transparent;
+}
+
+.scrollbar-x::-webkit-scrollbar {
+  height: var(--scrollbar-x-size);
+}
+
+.scrollbar-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-x::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--color-secondary) 75%, transparent);
+  border-radius: 0.25rem;
+}
+
+.scrollbar-x::-webkit-scrollbar-button {
   display: none;
   height: 0;
   width: 0;

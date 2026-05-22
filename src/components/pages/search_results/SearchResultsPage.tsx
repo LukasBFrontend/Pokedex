@@ -145,7 +145,8 @@ export const SearchResultsPage: React.FC = () => {
             className={[
               "grid",
               "grid-cols-(--search-grid-cols)",
-              "auto-rows-[35rem]",
+              "md:grid-cols-(--search-grid-cols-md)",
+              "lg:grid-cols-(--search-grid-cols-lg)",
               "gap-14",
             ].join(" ")}
           >

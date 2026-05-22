@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 import { Button } from "../../particles";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
+import { MAX_RESULTS } from "../../../constants";
 
 type Props = {
   enabled: boolean;
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex }) => {
+  const prevDisabled = prevIndex < 1;
+  const nextDisabled = nextIndex > MAX_RESULTS;
   return (
     <nav
       className={[
@@ -22,8 +25,10 @@ export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex })
       ].join(" ")}
     >
       <Link
-        className="tw-flex tw-items-center"
-        to={enabled ? `/pokemon/${prevIndex}` : ""}
+        className={["tw-flex", "tw-items-center", prevDisabled && "invisible"].join(
+          " ",
+        )}
+        to={enabled && prevIndex > 0 ? `/pokemon/${prevIndex}` : ""}
       >
         <Button>
           <ArrowLeft /> Prev
@@ -31,7 +36,9 @@ export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex })
       </Link>
       <hr className="grow my-6 text-secondary" />
       <Link
-        className="tw-flex tw-items-center"
+        className={["tw-flex", "tw-items-center", nextDisabled && "invisible"].join(
+          " ",
+        )}
         to={enabled ? `/pokemon/${nextIndex}` : ""}
       >
         <Button>

@@ -1,3 +1,4 @@
+export * from "./useMediaQuery";
 export * from "./usePagination";
 export * from "./usePokemonDetails";
 export * from "./usePokemonSpecies";

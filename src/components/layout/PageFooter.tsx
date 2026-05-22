@@ -9,7 +9,6 @@ export const PageFooter: React.FC<Props> = ({ children, className }) => (
   <footer
     className={[
       "row-start-3",
-      "col-start-2",
       className,
     ].join(" ")}
   >

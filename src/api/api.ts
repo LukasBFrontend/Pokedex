@@ -5,16 +5,15 @@ import type {
   FetchPokemonSpeciesResponse,
   FetchPokemonTypeResponse,
 } from "./types";
-import { API_BASE_URL } from "../constants";
+import { API_BASE_URL, MAX_RESULTS } from "../constants";
 
 export const FetchPokemons = async (
-  maxResults: number = 151,
   offset: number = 0,
 ): Promise<FetchPokemonsResponse> => {
   let url = `${API_BASE_URL}pokemon?`;
 
   url += `offset=${offset}&`;
-  url += `limit=${maxResults}`;
+  url += `limit=${MAX_RESULTS}`;
 
   try {
     const response = await axios.get(url);

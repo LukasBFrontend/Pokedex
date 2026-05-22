@@ -155,3 +155,48 @@ export const mergeTypeDamageRelations = (
 
   return merged;
 };
+
+export type PaginationItem =
+  | { kind: "page"; page: number }
+  | { kind: "ellipsis"; key: string };
+
+const PAGINATION_ITEMS = 4;
+
+export const getCompactPaginationItems = (
+  currentPage: number,
+  pageCount: number,
+): PaginationItem[] => {
+  if (pageCount <= PAGINATION_ITEMS) {
+    return Array.from({ length: pageCount }, (_, i) => ({
+      kind: "page" as const,
+      page: i + 1,
+    }));
+  }
+
+  const last = pageCount;
+
+  if (currentPage <= 2) {
+    return [
+      { kind: "page", page: 1 },
+      { kind: "page", page: 2 },
+      { kind: "ellipsis", key: "start" },
+      { kind: "page", page: last },
+    ];
+  }
+
+  if (currentPage >= last - 1) {
+    return [
+      { kind: "page", page: 1 },
+      { kind: "ellipsis", key: "end" },
+      { kind: "page", page: last - 1 },
+      { kind: "page", page: last },
+    ];
+  }
+
+  return [
+    { kind: "page", page: 1 },
+    { kind: "ellipsis", key: "middle" },
+    { kind: "page", page: currentPage },
+    { kind: "page", page: currentPage + 1 },
+  ];
+};
