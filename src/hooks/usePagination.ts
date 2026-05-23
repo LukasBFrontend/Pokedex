@@ -1,8 +1,7 @@
 import { useCallback, useEffect, type Dispatch, type SetStateAction } from "react";
 import { parsePageIndex, parseResultsPerPage } from "../utils";
 import { useIndexSearchParams } from "./useIndexSearchParams";
-
-export const RESULTS_PER_PAGE = 30;
+import { RESULTS_PER_PAGE } from "../constants";
 
 type PaginationContextType = {
   pageIndex: number;

@@ -207,7 +207,7 @@ const EntryPage: React.FC = () => {
           <hr className="my-8 text-transparent" />
           <section>
             <h3>Weaknesses</h3>
-            <div className={["flex", "items-end", "gap-4"].join(" ")}>
+            <div className={["flex", "flex-wrap", "gap-4"].join(" ")}>
               <EntryResistanceGroup
                 multiplier={2}
                 sprites={pokemonMeta?.typeRelationsSprites.weakness}

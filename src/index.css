@@ -28,8 +28,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  @media (max-width: 640px) {
+    font-size: 15.5px;
   }
 }
 
@@ -156,6 +156,46 @@ a.transitioning .pokemon-summary-card-view-transition,
   display: none;
   height: 0;
   width: 0;
+}
+
+.paginator-scroll-fade {
+  --paginator-scroll-fade-width: 2.75rem;
+  --paginator-scroll-fade-color: rgb(255 255 255);
+  --paginator-scroll-fade-shadow: rgba(196, 196, 196, 0.22);
+
+  pointer-events: none;
+  position: absolute;
+  inset-block: 0;
+  z-index: 10;
+  width: var(--paginator-scroll-fade-width);
+}
+
+.paginator-scroll-fade--left {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--paginator-scroll-fade-color) 0%,
+    color-mix(in srgb, var(--paginator-scroll-fade-color) 92%, transparent) 30%,
+    color-mix(in srgb, var(--paginator-scroll-fade-color) 55%, transparent) 62%,
+    transparent 100%
+  );
+  box-shadow:
+    inset 1.25rem 0 1.5rem -0.5rem var(--paginator-scroll-fade-shadow),
+    inset 0.5rem 0 0.75rem -0.35rem rgb(15 15 15 / 0.12);
+}
+
+.paginator-scroll-fade--right {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--paginator-scroll-fade-color) 0%,
+    color-mix(in srgb, var(--paginator-scroll-fade-color) 92%, transparent) 30%,
+    color-mix(in srgb, var(--paginator-scroll-fade-color) 55%, transparent) 62%,
+    transparent 100%
+  );
+  box-shadow:
+    inset -1.25rem 0 1.5rem -0.5rem var(--paginator-scroll-fade-shadow),
+    inset -0.5rem 0 0.75rem -0.35rem rgb(15 15 15 / 0.12);
 }
 
 .app-main-background {

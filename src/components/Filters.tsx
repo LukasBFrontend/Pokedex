@@ -2,13 +2,16 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Search } from "@mui/icons-material";
 import { useIndexSearchParams, useMediaQuery } from "../hooks";
 import { SEARCH_DEBOUNCE_MS } from "../constants";
+import { Button, SearchBar } from "./particles";
+import { FilterOverlay } from "./FilterOverlay";
 
-export const Navbar: React.FC = () => {
+export const Filters: React.FC = () => {
   const [
     searchInput,
     setSearchInput,
   ] = useState<string>("");
   const [, setIndexSearchParams] = useIndexSearchParams();
+  const [overlayActive, setOverlayActive] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isLargeDevice = useMediaQuery("(min-width: 640px)");
 
@@ -68,49 +71,57 @@ export const Navbar: React.FC = () => {
 
   if (!isLargeDevice) {
     return (
-      <button
-        type="button"
-        aria-label="Search"
+      <form
         className={[
-          "h-fit",
-          "px-4",
-          "pt-3",
-          "pb-4",
-          "rounded-full",
-          "bg-white/90",
+          "h-full",
+          "relative",
           "flex",
           "items-center",
-          "hover:bg-white",
         ].join(" ")}
+        onSubmit={handleSubmit}
       >
-        <Search />
-      </button>
+        <button
+          type="button"
+          aria-label="Search"
+          className={[
+            "size-11",
+            "rounded-full",
+            "bg-white/90",
+            "flex",
+            "items-center",
+            "justify-center",
+            "hover:bg-white",
+          ].join(" ")}
+          onClick={() => setOverlayActive(true)}
+        >
+          <Search
+            className={[
+              "absolute",
+              "mb-0.5",
+            ].join(" ")}
+          />
+        </button>
+        <FilterOverlay active={overlayActive}>
+          <div className="absolute -bottom-2 right-0 w-full flex justify-center">
+            <Button
+              variant="alt"
+              onClick={() => setOverlayActive(false)}
+            >
+              Close
+            </Button>
+          </div>
+          <SearchBar
+            className="w-full max-h-12"
+            onChange={handleInputChange}
+          />
+        </FilterOverlay>
+      </form>
     );
   }
 
   return (
-    <form
-      className={[
-        "h-full",
-        "px-6",
-        "pt-3",
-        "pb-4",
-        "rounded-full",
-        "bg-white/90",
-        "flex",
-        "hover:bg-white",
-      ].join(" ")}
-      onSubmit={handleSubmit}
-    >
-      <input
-        placeholder="Search for a pokemon..."
-        className="h-full max-w-100 focus:outline-0"
-        type="search"
-        onChange={handleInputChange}
-      />
-      <button type="submit">
-        <Search />
-      </button>
+    <form onSubmit={handleSubmit}>
+      <SearchBar onChange={handleInputChange} />
     </form>
   );
 };

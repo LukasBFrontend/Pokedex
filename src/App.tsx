@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { Navbar } from "./components/Navbar";
+import { Filters } from "./components/Filters";
 import { useViewTransitionBackGuard } from "./utils/viewTransitionBack";
 import { Button } from "./components/particles";
 import { ArrowLeft } from "@mui/icons-material";
@@ -14,13 +14,14 @@ const App: React.FC = () => {
         "app-main-background",
         "h-dvh",
         "w-full",
-        "py-6",
-        "overflow-hidden",
       ].join(" ")}
     >
       <div
         className={[
           "mx-auto",
+          "py-3.5",
+          "sm:py-6",
+          "sm:px-6",
           "grid",
           "h-full",
           "min-h-0",
@@ -28,7 +29,8 @@ const App: React.FC = () => {
           "md:max-w-[var(--page-max-width-md)]",
           "2xl:max-w-[var(--page-max-width)]",
           "grid-rows-[auto_minmax(0,1fr)_auto]",
-          "gap-6",
+          "gap-3.5",
+          "sm:gap-6",
         ].join(" ")}
       >
         <header
@@ -36,11 +38,12 @@ const App: React.FC = () => {
             "app-header",
             "relative",
             "z-100",
+            "px-6",
+            "sm:px-0",
             "flex",
-            "items-center",
+            "items-end",
             "justify-between",
             "gap-8",
-            "px-6",
             "shadow-sm",
           ].join(" ")}
         >
@@ -86,7 +89,7 @@ const App: React.FC = () => {
           >
             Poké<span className="text-primary">dex</span>
           </h1>
-          <Navbar />
+          <Filters />
         </header>
 
         <Outlet />
