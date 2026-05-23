@@ -15,11 +15,6 @@ export const PokemonSummaryCardTransition = ({
 
 type TitleVariant = "md" | "lg";
 
-const titleClassName: Record<TitleVariant, string> = {
-  md: "capitalize",
-  lg: "capitalize text-4xl",
-};
-
 type Props = {
   summary: PokemonSummary;
   titleVariant?: TitleVariant;
@@ -29,6 +24,11 @@ export const PokemonSummaryCard: React.FC<Props> = ({
   summary,
   titleVariant = "md",
 }) => {
+  const heading = (
+    <>
+      {summary.name} <span className="text-gray-500">#{summary.id}</span>
+    </>
+  );
   return (
     <section
       className={[
@@ -46,13 +46,15 @@ export const PokemonSummaryCard: React.FC<Props> = ({
         titleVariant === "md" ? "opacity-75" : "",
       ].join(" ")}
     >
-      <h3 className={titleClassName[titleVariant]}>
-        {summary.name} <span className="text-gray-500">#{summary.id}</span>
-      </h3>
+      {titleVariant === "md" ? (
+        <h3 className={["capitalize"].join(" ")}>{heading}</h3>
+      ) : (
+        <h2 className={["capitalize"].join(" ")}>{heading}</h2>
+      )}
       <img
         className="w-150 max-w-full"
         src={summary.artworkURL}
-        alt=""
+        alt={summary.name}
       />
       <div className="flex gap-4">
         {summary.typeSprites?.map((sprite) => (
@@ -63,7 +65,7 @@ export const PokemonSummaryCard: React.FC<Props> = ({
             <img
               className="rounded-md"
               src={sprite["generation-viii"]["sword-shield"].name_icon}
-              alt=""
+              alt={sprite.name}
             />
           </div>
         ))}

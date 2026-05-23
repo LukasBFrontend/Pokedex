@@ -54,20 +54,30 @@ export const Filters: React.FC = () => {
     [],
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    debounceSubmit: boolean,
+  ): void => {
     const value = e.currentTarget.value;
     setSearchInput(value);
-    scheduleSearch(value);
+    if (debounceSubmit) {
+      scheduleSearch(value);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
+    setOverlayActive(false);
     if (debounceRef.current !== null) {
       clearTimeout(debounceRef.current);
       debounceRef.current = null;
     }
     search(searchInput);
   };
+
+  const closeOverlay = useCallback((): void => {
+    setOverlayActive(false);
+  }, []);
 
   if (!isLargeDevice) {
     return (
@@ -101,18 +111,22 @@ export const Filters: React.FC = () => {
             ].join(" ")}
           />
         </button>
-        <FilterOverlay active={overlayActive}>
+        <FilterOverlay
+          active={overlayActive}
+          onClose={closeOverlay}
+        >
           <div className="absolute -bottom-2 right-0 w-full flex justify-center">
             <Button
+              type="button"
               variant="alt"
-              onClick={() => setOverlayActive(false)}
+              onClick={closeOverlay}
             >
               Close
             </Button>
           </div>
           <SearchBar
             className="w-full max-h-12"
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e, false)}
           />
         </FilterOverlay>
       </form>
@@ -121,7 +135,7 @@ export const Filters: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <SearchBar onChange={handleInputChange} />
+      <SearchBar onChange={(e) => handleInputChange(e, true)} />
     </form>
   );
 };

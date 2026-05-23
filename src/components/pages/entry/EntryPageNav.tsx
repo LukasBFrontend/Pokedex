@@ -1,18 +1,22 @@
 import React from "react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { Button } from "../../particles";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { MAX_RESULTS } from "../../../constants";
 
 type Props = {
-  enabled: boolean;
-  prevIndex: number;
-  nextIndex: number;
+  index: number;
 };
 
-export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex }) => {
+export const EntryPageNav: React.FC<Props> = ({ index }) => {
+  const navigate = useNavigate();
+
+  const prevIndex = index - 1;
+  const nextIndex = index + 1;
+
   const prevDisabled = prevIndex < 1;
   const nextDisabled = nextIndex > MAX_RESULTS;
+
   return (
     <nav
       className={[
@@ -24,27 +28,19 @@ export const EntryPageNav: React.FC<Props> = ({ enabled, prevIndex, nextIndex })
         "gap-2",
       ].join(" ")}
     >
-      <Link
-        className={["tw-flex", "tw-items-center", prevDisabled && "invisible"].join(
-          " ",
-        )}
-        to={enabled && prevIndex > 0 ? `/pokemon/${prevIndex}` : ""}
+      <Button
+        className={[prevDisabled && "invisible"].join(" ")}
+        onClick={() => navigate(`/pokemon/${prevIndex}`)}
       >
-        <Button>
-          <ArrowLeft /> Prev
-        </Button>
-      </Link>
+        <ArrowLeft /> Prev
+      </Button>
       <hr className="grow my-6 text-secondary" />
-      <Link
-        className={["tw-flex", "tw-items-center", nextDisabled && "invisible"].join(
-          " ",
-        )}
-        to={enabled ? `/pokemon/${nextIndex}` : ""}
+      <Button
+        className={[nextDisabled && "invisible"].join(" ")}
+        onClick={() => navigate(`/pokemon/${nextIndex}`)}
       >
-        <Button>
-          Next <ArrowRight />
-        </Button>
-      </Link>
+        Next <ArrowRight />
+      </Button>
     </nav>
   );
 };

@@ -139,7 +139,7 @@ export const mergeTypeDamageRelations = (
       continue;
     }
 
-    const sprites = incomingType.sprites;
+    const sprites = { ...incomingType.sprites, name: incomingType.name };
     if (multiplier === 0) {
       merged.immuneTo.push(sprites);
     } else if (multiplier === 4) {
@@ -155,6 +155,20 @@ export const mergeTypeDamageRelations = (
 
   return merged;
 };
+
+export const getFocusableElements = (container: HTMLElement): HTMLElement[] =>
+  Array.from(
+    container.querySelectorAll<HTMLElement>(
+      [
+        "a[href]",
+        "button:not([disabled])",
+        "input:not([disabled])",
+        "select:not([disabled])",
+        "textarea:not([disabled])",
+        '[tabindex]:not([tabindex="-1"])',
+      ].join(", "),
+    ),
+  ).filter((element) => !element.hasAttribute("disabled"));
 
 export type PaginationItem =
   | { kind: "page"; page: number }

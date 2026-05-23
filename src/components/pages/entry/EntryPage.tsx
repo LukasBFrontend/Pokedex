@@ -22,7 +22,7 @@ import {
   summaryFromCache,
 } from "../../../utils";
 import { API_BASE_URL, type pokemonType } from "../../../constants";
-import { PageArticle, PageFooter } from "../../layout";
+import { PageMain, PageFooter } from "../../layout";
 import { EntryPageNav, EntryResistanceGroup } from ".";
 import type {
   FetchPokemonDetailsResponse,
@@ -41,7 +41,7 @@ const formatMetaData = (
   id: pokemon.id,
   name: pokemon.name,
   artworkURL: pokemon.sprites.other["official-artwork"].front_default,
-  typeSprites: types.map((type) => type?.sprites),
+  typeSprites: types.map((type) => ({ ...type?.sprites, name: type.name })),
   typeRelationsSprites: damageRelations,
   description: getEnglishDescription(species),
 });
@@ -179,7 +179,7 @@ const EntryPage: React.FC = () => {
 
   return (
     <>
-      <PageArticle>
+      <PageMain>
         <div className="entry-pokemon-card">
           <PokemonSummaryCardTransition className="w-full">
             {cardSummary != null ? (
@@ -192,11 +192,7 @@ const EntryPage: React.FC = () => {
             )}
           </PokemonSummaryCardTransition>
         </div>
-        <EntryPageNav
-          enabled={Boolean(pokemonMeta)}
-          prevIndex={pokemonId - 1}
-          nextIndex={pokemonId + 1}
-        />
+        <EntryPageNav index={pokemonId} />
 
         <div className="px-8">
           {pokemonMeta != null && (
@@ -235,7 +231,7 @@ const EntryPage: React.FC = () => {
             </div>
           </section>
         </div>
-      </PageArticle>
+      </PageMain>
       <PageFooter
         className={[
           "w-full",

@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router";
+import { useNavigate, Outlet, useLocation } from "react-router";
 import { Filters } from "./components/Filters";
 import { useViewTransitionBackGuard } from "./utils/viewTransitionBack";
 import { Button } from "./components/particles";
@@ -7,6 +7,7 @@ import { ArrowLeft } from "@mui/icons-material";
 const App: React.FC = () => {
   useViewTransitionBackGuard();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -68,11 +69,12 @@ const App: React.FC = () => {
               ].join(" ")}
             >
               <span className="skew-x-20 z-100">
-                <Link to="/">
-                  <Button variant="secondary">
-                    <ArrowLeft /> Home
-                  </Button>
-                </Link>
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate("/")}
+                >
+                  <ArrowLeft /> Home
+                </Button>
               </span>
             </aside>
           )}

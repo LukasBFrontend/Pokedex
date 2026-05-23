@@ -5,8 +5,8 @@ interface Props {
   className?: string;
 }
 
-export const PageArticle: React.FC<Props> = ({ children, className }) => (
-  <article
+export const PageMain: React.FC<Props> = ({ children, className }) => (
+  <main
     className={[
       "scrollbar",
       "row-start-2",
@@ -24,5 +24,5 @@ export const PageArticle: React.FC<Props> = ({ children, className }) => (
     ].join(" ")}
   >
     {children}
-  </article>
+  </main>
 );

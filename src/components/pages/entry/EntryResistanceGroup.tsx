@@ -1,9 +1,9 @@
 import React from "react";
-import type { PokemonTypeSprites } from "../../../api/types";
+import type { NamedTypeSprites } from "./types";
 
 type Props = {
   multiplier: number;
-  sprites: PokemonTypeSprites[];
+  sprites: NamedTypeSprites[];
   emphasized?: boolean;
 };
 
@@ -14,23 +14,29 @@ export const EntryResistanceGroup: React.FC<Props> = ({
 }) => {
   return (
     <>
-      {sprites?.map((sprite) => (
-        <div
-          className={[
-            "flex",
-            "flex-col",
-            "items-center",
-            "gap-2.5",
-            emphasized ? "text-primary/75" : "",
-          ].join(" ")}
-        >
-          <img
-            className="w-35 rounded-md"
-            src={sprite["generation-viii"]["sword-shield"].name_icon}
-          />
-          {`${multiplier}x`}
-        </div>
-      ))}
+      {sprites?.map((sprite) => {
+        const icon = sprite["generation-viii"]["sword-shield"].name_icon;
+
+        return (
+          <div
+            key={`type-img-${icon}`}
+            className={[
+              "flex",
+              "flex-col",
+              "items-center",
+              "gap-2.5",
+              emphasized ? "text-primary/75" : "",
+            ].join(" ")}
+          >
+            <img
+              className="w-35 rounded-md"
+              src={icon}
+              alt={sprite.name}
+            />
+            {`${multiplier}x`}
+          </div>
+        );
+      })}
     </>
   );
 };

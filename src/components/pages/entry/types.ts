@@ -1,18 +1,22 @@
 import type { PokemonTypeSprites } from "../../../api/types";
 
+export interface NamedTypeSprites extends PokemonTypeSprites {
+  name: string;
+}
+
 export type PokemonMetaData = {
   id: number;
   name: string;
-  typeSprites: PokemonTypeSprites[];
+  typeSprites: NamedTypeSprites[];
   typeRelationsSprites: TypeRelations;
   artworkURL: string;
-  description: string; 
+  description: string;
 };
 
 export type TypeRelations = {
-  weakness: PokemonTypeSprites[];
-  doubleWeakness: PokemonTypeSprites[];
-  resistance: PokemonTypeSprites[];
-  doubleResistance: PokemonTypeSprites[];
-  immuneTo: PokemonTypeSprites[];
+  weakness: NamedTypeSprites[];
+  doubleWeakness: NamedTypeSprites[];
+  resistance: NamedTypeSprites[];
+  doubleResistance: NamedTypeSprites[];
+  immuneTo: NamedTypeSprites[];
 };

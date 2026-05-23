@@ -16,7 +16,7 @@ import { NavLink } from "react-router";
 import { SEARCH_GRID_COLS } from "../../../constants";
 import type { PokemonSummary } from "./types";
 import type { FetchPokemonTypeResponse } from "../../../api/types";
-import { PageArticle, PageFooter } from "../../layout";
+import { PageMain, PageFooter } from "../../layout";
 import { SearchPaginator } from "./SearchPaginator";
 
 const PokemonSummaryLink: React.FC<{ summary: PokemonSummary }> = ({ summary }) => {
@@ -129,8 +129,8 @@ export const SearchResultsPage: React.FC = () => {
 
   return (
     <>
-      <PageArticle>
-        <div
+      <PageMain>
+        <article
           key={pageIndex}
           className={[
             "opacity-100",
@@ -152,7 +152,7 @@ export const SearchResultsPage: React.FC = () => {
           >
             {displaySummaries.map((summary) => (
               <PokemonSummaryLink
-                key={summary.id}
+                key={`pokemon-summary-${summary.id}`}
                 summary={summary}
               />
             ))}
@@ -162,8 +162,8 @@ export const SearchResultsPage: React.FC = () => {
               />
             ))}
           </div>
-        </div>
-      </PageArticle>
+        </article>
+      </PageMain>
       <PageFooter>
         <SearchPaginator
           index={pageIndex}

@@ -1,2 +1,2 @@
-export * from "./PageArticle";
+export * from "./PageMain";
 export * from "./PageFooter";
