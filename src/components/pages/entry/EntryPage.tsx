@@ -17,11 +17,12 @@ import {
 } from "../../../api/api";
 import {
   getEnglishDescription,
-  getPokemonTypeFromUrl,
+  getPokemonIdFromUrl,
   mergeTypeDamageRelations,
+  resolvePokemonTypeKey,
   summaryFromCache,
 } from "../../../utils";
-import { API_BASE_URL, type pokemonType } from "../../../constants";
+import { API_BASE_URL } from "../../../constants";
 import { PageMain, PageFooter } from "../../layout";
 import { EntryPageNav, EntryResistanceGroup } from ".";
 import type {
@@ -104,8 +105,7 @@ const EntryPage: React.FC = () => {
               return cached;
             }
 
-            const type =
-              getPokemonTypeFromUrl(slot.type.url) ?? (slot.type.name as pokemonType);
+            const type = resolvePokemonTypeKey(slot.type.url, slot.type.name);
             let typeResponse = pokemonType(type);
 
             if (typeResponse == null) {
@@ -162,7 +162,8 @@ const EntryPage: React.FC = () => {
         return;
       }
 
-      let species = pokemonSpecies(pokemonId);
+      const speciesId = getPokemonIdFromUrl(pokemon.species.url);
+      let species = pokemonSpecies(speciesId);
       if (species == null) {
         species = await FetchPokemonSpecies(pokemon.species.url);
         if (species == null) {

@@ -4,7 +4,7 @@ import { usePagination, usePokemonDetails, usePokemonTypes } from "../../../hook
 import { FetchPokemonDetails, FetchPokemonType } from "../../../api/api";
 import {
   getPokemonIdFromUrl,
-  getPokemonTypeFromUrl,
+  resolvePokemonTypeKey,
   toPokemonSummary,
 } from "../../../utils";
 import {
@@ -43,7 +43,7 @@ const PokemonSummaryLink: React.FC<{ summary: PokemonSummary }> = ({ summary }) 
 };
 
 export const SearchResultsPage: React.FC = () => {
-  const { pokemonType } = usePokemonTypes();
+  const { pokemonType, setPokemonType } = usePokemonTypes();
   const { pokemonDetails, setPokemonDetails } = usePokemonDetails();
   const { results } = useSearchResults();
   const { pageIndex, setPageIndex, resultsPerPage } = usePagination();
@@ -78,14 +78,14 @@ export const SearchResultsPage: React.FC = () => {
           const types = (
             await Promise.all(
               pokemon.types.map(async (slot) => {
-                const type = getPokemonTypeFromUrl(slot.type.url);
-                if (type == null) {
-                  return null;
-                }
+                const type = resolvePokemonTypeKey(slot.type.url, slot.type.name);
                 let typeResponse = pokemonType(type);
 
                 if (typeResponse == null) {
                   typeResponse = await FetchPokemonType(slot.type.url);
+                  if (typeResponse != null) {
+                    setPokemonType(typeResponse);
+                  }
                 }
                 return typeResponse;
               }),
@@ -128,6 +128,7 @@ export const SearchResultsPage: React.FC = () => {
     pokemonDetails,
     setPokemonDetails,
     pokemonType,
+    setPokemonType,
   ]);
 
   const displaySummaries = results ? summaries : [];

@@ -33,10 +33,7 @@ export const summaryFromCache = (
   }
 
   const types = pokemon.types.map((slot) => {
-    const type = getPokemonTypeFromUrl(slot.type.url);
-    if (type == null) {
-      return null;
-    }
+    const type = resolvePokemonTypeKey(slot.type.url, slot.type.name);
     return pokemonType(type);
   });
 
@@ -57,6 +54,12 @@ export const getPokemonTypeFromUrl = (url: typeURL | string): pokemonType | null
   }
   return slug as pokemonType;
 };
+
+/** PokeAPI type URLs often use numeric ids; fall back to the type name from the slot. */
+export const resolvePokemonTypeKey = (
+  url: string,
+  name: string,
+): pokemonType => getPokemonTypeFromUrl(url) ?? (name as pokemonType);
 
 export const getPokemonIdFromUrl = (url: string): number => {
   const match = /\/(\d+)\/?$/.exec(url);
