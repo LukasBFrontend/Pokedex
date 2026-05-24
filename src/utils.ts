@@ -21,7 +21,7 @@ export const toPokemonSummary = (
   id: pokemon.id,
   name: pokemon.name,
   artworkURL: pokemon.sprites.other["official-artwork"].front_default,
-  typeSprites: types.map((type) => type?.sprites),
+  typeSprites: types.map((type) => ({ ...type?.sprites, name: type?.name })),
 });
 
 export const summaryFromCache = (

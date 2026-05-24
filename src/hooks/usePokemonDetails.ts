@@ -39,7 +39,9 @@ export const usePokemonDetails = (): PokemonDetailsContextType => {
         let pokemon = pokemonDetails(id);
         if (pokemon == null) {
           pokemon = await FetchPokemonDetails(entry.url);
-          setPokemonDetails(pokemon);
+          if (pokemon != null) {
+            setPokemonDetails(pokemon);
+          }
         }
       }
     };

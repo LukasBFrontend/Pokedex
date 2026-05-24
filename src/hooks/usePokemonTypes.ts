@@ -29,10 +29,16 @@ export const usePokemonTypes = (): PokemonTypesContextType => {
   useEffect(() => {
     const prefetchTypes = async (): Promise<void> => {
       for (const url of Object.values(TYPE_URLS)) {
-        let type = pokemonType(getPokemonTypeFromUrl(url));
+        const typeKey = getPokemonTypeFromUrl(url);
+        if (typeKey == null) {
+          continue;
+        }
+        let type = pokemonType(typeKey);
         if (type == null) {
           type = await FetchPokemonType(url);
-          setPokemonType(type);
+          if (type != null) {
+            setPokemonType(type);
+          }
         }
       }
     };

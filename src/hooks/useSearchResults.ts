@@ -37,7 +37,9 @@ export const useSearchResults = (): SearchResultsContextType => {
     }
     const prefetchPage = async (): Promise<void> => {
       const response = await FetchPokemons();
-      setPokemon(response.results);
+      if (response != null) {
+        setPokemon(response.results);
+      }
     };
 
     void prefetchPage();

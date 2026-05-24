@@ -84,6 +84,9 @@ const EntryPage: React.FC = () => {
       let pokemon = pokemonDetails(pokemonId);
       if (pokemon == null) {
         pokemon = await FetchPokemonDetails(pokemonUrl);
+        if (!pokemon) {
+          return;
+        }
         setPokemonDetails(pokemon);
       }
 
@@ -93,26 +96,35 @@ const EntryPage: React.FC = () => {
 
       const typeByUrl = new Map<string, FetchPokemonTypeResponse>();
 
-      const types = await Promise.all(
-        pokemon.types.map(async (slot) => {
-          const cached = typeByUrl.get(slot.type.url);
-          if (cached != null) {
-            return cached;
-          }
+      const types = (
+        await Promise.all(
+          pokemon.types.map(async (slot) => {
+            const cached = typeByUrl.get(slot.type.url);
+            if (cached != null) {
+              return cached;
+            }
 
-          const type =
-            getPokemonTypeFromUrl(slot.type.url) ?? (slot.type.name as pokemonType);
-          let typeResponse = pokemonType(type);
+            const type =
+              getPokemonTypeFromUrl(slot.type.url) ?? (slot.type.name as pokemonType);
+            let typeResponse = pokemonType(type);
 
-          if (typeResponse == null) {
-            typeResponse = await FetchPokemonType(slot.type.url);
-            setPokemonType(typeResponse);
-          }
+            if (typeResponse == null) {
+              typeResponse = await FetchPokemonType(slot.type.url);
+              if (typeResponse == null) {
+                return null;
+              }
+              setPokemonType(typeResponse);
+            }
 
-          typeByUrl.set(slot.type.url, typeResponse);
-          return typeResponse;
-        }),
-      );
+            typeByUrl.set(slot.type.url, typeResponse);
+            return typeResponse;
+          }),
+        )
+      ).filter((t): t is FetchPokemonTypeResponse => t != null);
+
+      if (types.length === 0) {
+        return;
+      }
 
       const incomingTypeUrls = new Set<string>();
       for (const defendingType of types) {
@@ -133,6 +145,9 @@ const EntryPage: React.FC = () => {
             return;
           }
           const typeResponse = await FetchPokemonType(url);
+          if (typeResponse == null) {
+            return;
+          }
           setPokemonType(typeResponse);
           typeByUrl.set(url, typeResponse);
         }),
@@ -150,6 +165,9 @@ const EntryPage: React.FC = () => {
       let species = pokemonSpecies(pokemonId);
       if (species == null) {
         species = await FetchPokemonSpecies(pokemon.species.url);
+        if (species == null) {
+          return;
+        }
         setPokemonSpecies(species);
       }
 
@@ -206,11 +224,11 @@ const EntryPage: React.FC = () => {
             <div className={["flex", "flex-wrap", "gap-4"].join(" ")}>
               <EntryResistanceGroup
                 multiplier={2}
-                sprites={pokemonMeta?.typeRelationsSprites.weakness}
+                sprites={pokemonMeta?.typeRelationsSprites.weakness ?? []}
               />
               <EntryResistanceGroup
                 multiplier={4}
-                sprites={pokemonMeta?.typeRelationsSprites.doubleWeakness}
+                sprites={pokemonMeta?.typeRelationsSprites.doubleWeakness ?? []}
                 emphasized
               />
             </div>
@@ -221,11 +239,11 @@ const EntryPage: React.FC = () => {
             <div className={["flex", "flex-wrap", "gap-4"].join(" ")}>
               <EntryResistanceGroup
                 multiplier={0.5}
-                sprites={pokemonMeta?.typeRelationsSprites.resistance}
+                sprites={pokemonMeta?.typeRelationsSprites.resistance ?? []}
               />
               <EntryResistanceGroup
                 multiplier={0.25}
-                sprites={pokemonMeta?.typeRelationsSprites.doubleResistance}
+                sprites={pokemonMeta?.typeRelationsSprites.doubleResistance ?? []}
                 emphasized
               />
             </div>

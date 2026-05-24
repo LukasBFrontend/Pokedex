@@ -42,6 +42,9 @@ export const usePokemonSpecies = (): PokemonSpeciesContextType => {
         let details = pokemonDetails(pokemonId);
         if (details == null) {
           details = await FetchPokemonDetails(entry.url);
+          if (details == null) {
+            continue;
+          }
           setPokemonDetails(details);
         }
 
@@ -49,7 +52,9 @@ export const usePokemonSpecies = (): PokemonSpeciesContextType => {
         let species = pokemonSpecies(speciesId);
         if (species == null) {
           species = await FetchPokemonSpecies(details.species.url);
-          setPokemonSpecies(species);
+          if (species != null) {
+            setPokemonSpecies(species);
+          }
         }
       }
     };

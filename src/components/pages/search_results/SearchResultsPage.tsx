@@ -69,24 +69,34 @@ export const SearchResultsPage: React.FC = () => {
           let pokemon = pokemonDetails(id);
           if (pokemon == null) {
             pokemon = await FetchPokemonDetails(entry.url);
+            if (pokemon == null) {
+              continue;
+            }
             setPokemonDetails(pokemon);
           }
 
-          const types = await Promise.all(
-            pokemon.types.map(async (slot) => {
-              const type = getPokemonTypeFromUrl(slot.type.url);
-              let typeResponse = pokemonType(type);
+          const types = (
+            await Promise.all(
+              pokemon.types.map(async (slot) => {
+                const type = getPokemonTypeFromUrl(slot.type.url);
+                if (type == null) {
+                  return null;
+                }
+                let typeResponse = pokemonType(type);
 
-              if (typeResponse == null) {
-                typeResponse = await FetchPokemonType(slot.type.url);
-              }
-              return typeResponse;
-            }),
-          );
+                if (typeResponse == null) {
+                  typeResponse = await FetchPokemonType(slot.type.url);
+                }
+                return typeResponse;
+              }),
+            )
+          ).filter((t): t is FetchPokemonTypeResponse => t != null);
 
-          mappedSummaries.push(
-            toPokemonSummary(pokemon, types as FetchPokemonTypeResponse[]),
-          );
+          if (types.length === 0) {
+            continue;
+          }
+
+          mappedSummaries.push(toPokemonSummary(pokemon, types));
         }
       };
 
